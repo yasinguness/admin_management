@@ -1,6 +1,7 @@
-import 'package:admin_management/network/services/api.dart';
+import 'package:admin_management/provider_setup.dart';
 import 'package:admin_management/ui/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,10 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Api api = Api();
-    return const MaterialApp(
-      title: 'Material App',
-      home: HomeScreen(),
+    return MultiProvider(
+      providers: providers,
+      child: const MaterialApp(title: 'Material App', home: HomeScreen()),
     );
   }
 }

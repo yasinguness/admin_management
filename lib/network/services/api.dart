@@ -4,7 +4,7 @@ import 'package:admin_management/network/model/order.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
-  final String _baseUrl = "http://192.168.0.102:3000";
+  final String _baseUrl = "http://192.168.1.36:3000";
 
   var https = http.Client();
 
@@ -20,5 +20,11 @@ class Api {
     } else {
       throw Exception("Hata oluştu");
     }
+  }
+
+  Future<Order> getOrder(String orderId) async {
+    var response = await https.get(Uri.parse("$_baseUrl/order/$orderId"));
+    var parsed = Order.fromJson(jsonDecode(response.body));
+    return parsed;
   }
 }

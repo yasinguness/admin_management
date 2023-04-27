@@ -1,6 +1,8 @@
-import 'package:admin_management/common/widgets/dashboard_widget/order_detail.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/order_item.dart';
+import 'package:admin_management/ui/base/base_view.dart';
+import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,66 +14,79 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 3,
-          child: Container(
-            color: Colors.grey.shade300,
-            child: Column(
-              children: [_header(context), _tabs(), _orderItem()],
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 7,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
+    return BaseView<DashboardViewModel>(
+      builder: (context, value, widget) => value.busy
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    color: Colors.grey.shade300,
+                    child: Column(
+                      children: [_header(context), _tabs(), _orderItem(value)],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 7,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Container(
+                      color: Colors.white,
                       child: Column(
-                        children: [
-                          _title(context),
-                          _headerInfoRow(),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                        ],
-                      ),
+                          //crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                children: [
+                                  _title(context),
+                                  _headerInfoRow(value),
+                                  const SizedBox(
+                                    height: 32,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Expanded(
+                                flex: 8,
+                                child: Text(
+                                    "") /* OrderDetail(
+                                order: value.order!,
+                                dashboardViewModel: Provider.of<DashboardViewModel>(context),
+                                /* asset: "assets/images/GLASS-2.png",
+                                    itemName: value.order!.coffeeList![index].name,
+                                    itemPrice: value.order!.coffeeList![index].mediumPrice,
+                                    coffeSize: value.order!.coffeeList![index].coffeeSize,
+                                    itemQuantity: value.order!.coffeeList![index].quantitiy, */
+                              ), */
+                                ),
+                            Expanded(
+                              flex: 1,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                    height: 60,
+                                    width: 180,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700),
+                                      onPressed: () {},
+                                      child: const Text("Siparişi Onayla"),
+                                    )),
+                              ),
+                            )
+                          ]),
                     ),
-                    const Expanded(
-                      flex: 8,
-                      child: OrderDetail(
-                        coffeeName: "Ice Mocha",
-                        coffeePrice: 28,
-                        quantity: 3,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                            height: 60,
-                            width: 180,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700),
-                              onPressed: () {},
-                              child: const Text("Siparişi Onayla"),
-                            )),
-                      ),
-                    )
-                  ]),
+                  ),
+                )
+              ],
             ),
-          ),
-        )
-      ],
+      model: DashboardViewModel(api: Provider.of(context)),
+      onModelReady: (p0) => p0.fetchOrders(),
     );
   }
 
@@ -82,27 +97,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  IntrinsicHeight _headerInfoRow() {
+  IntrinsicHeight _headerInfoRow(DashboardViewModel value) {
     return IntrinsicHeight(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Row(
-          children: const [
-            VerticalDivider(
+          children: [
+            const VerticalDivider(
               thickness: 1,
               color: Colors.grey,
             ),
             Expanded(
-              child: OrderInfoRow(text1: "İsim", text2: "Yasin"),
+              child: OrderInfoRow(text1: "İsim", text2: value.order!.ordersOwner!),
             ),
-            VerticalDivider(
+            const VerticalDivider(
               thickness: 1,
               color: Colors.grey,
             ),
             Expanded(
-              child: OrderInfoRow(text1: "Masa Numarası", text2: "NO:4"),
+              child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.tableNumber.toString()),
             ),
-            VerticalDivider(
+            const VerticalDivider(
               thickness: 1,
               color: Colors.grey,
             ),
@@ -131,15 +146,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  SizedBox _orderItem() {
+  SizedBox _orderItem(DashboardViewModel value) {
     return SizedBox(
       height: 500,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: 4,
+          itemCount: value.orders!.length,
           itemBuilder: (context, index) {
-            return const OrderItem();
+            value.indexx = index;
+            return GestureDetector(
+                onTap: () async {
+                  await value.getOrder(value.orders![index].id!);
+                },
+                child: OrderItem(item: value.orders![index]));
           },
         ),
       ),
