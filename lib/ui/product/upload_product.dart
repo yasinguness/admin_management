@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class UploadProduct extends StatefulWidget {
-  const UploadProduct({super.key});
+class UploadProductScreen extends StatefulWidget {
+  const UploadProductScreen({super.key});
 
   @override
-  State<UploadProduct> createState() => _UploadProductState();
+  State<UploadProductScreen> createState() => _UploadProductScreenState();
 }
 
-class _UploadProductState extends State<UploadProduct> {
+class _UploadProductScreenState extends State<UploadProductScreen> {
   File? selectedFile;
   void selectFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -49,10 +49,9 @@ class _UploadProductState extends State<UploadProduct> {
         Expanded(
           flex: 9,
           child: Container(
-            width: size.width,
-            color: Colors.yellow,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.grey.shade300),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -62,58 +61,66 @@ class _UploadProductState extends State<UploadProduct> {
                   const SizedBox(
                     height: 50,
                   ),
-                  /*  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Text("Upload Product:"),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              suffixIcon: Icon(Icons.file_upload_sharp),
-                              border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                  const Text("Upload Product:"),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.file_upload_sharp),
+                        hintText: "Product Image",
+                        border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(
+                        hintText: "Product Name", border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(
+                        hintText: "Product Price", border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(
+                        hintText: "Product Description", border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown,
+                          padding: const EdgeInsets.all(8),
+                          alignment: Alignment.center,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
                         ),
-                      )
-                    ],
-                  ) */
+                        child: const Text(
+                          "Ürün Ekle",
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
           ),
         )
-/*           Text(
-          "Ürün Ekle",
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.brown.shade500),
-        ),
-        /*             SizedBox(
-              height: size.height * 0.5,
-            ) */
-
-        Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Container(
-            color: Colors.black,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Upload Coffee",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("Upload Product:"),
-                    TextField(
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.file_upload_sharp),
-                          border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ) */
       ],
     );
   }

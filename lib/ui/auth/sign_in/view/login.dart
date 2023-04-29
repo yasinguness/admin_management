@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LoginView extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  LoginView({super.key});
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

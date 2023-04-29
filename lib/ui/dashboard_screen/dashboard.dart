@@ -4,6 +4,8 @@ import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_m
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/widgets/dashboard_widget/order_detail.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -51,10 +53,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ],
                               ),
                             ),
-                            const Expanded(
-                                flex: 8,
-                                child: Text(
-                                    "") /* OrderDetail(
+                            Expanded(
+                              flex: 8,
+                              child: OrderDetail(
                                 order: value.order!,
                                 dashboardViewModel: Provider.of<DashboardViewModel>(context),
                                 /* asset: "assets/images/GLASS-2.png",
@@ -62,8 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     itemPrice: value.order!.coffeeList![index].mediumPrice,
                                     coffeSize: value.order!.coffeeList![index].coffeeSize,
                                     itemQuantity: value.order!.coffeeList![index].quantitiy, */
-                              ), */
-                                ),
+                              ),
+                            ),
                             Expanded(
                               flex: 1,
                               child: Align(
@@ -93,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Text _title(BuildContext context) {
     return Text(
       "Sipariş Detay",
-      style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
@@ -135,7 +136,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(24.0),
           child: Text(
             "TASK LIST",
-            style: Theme.of(context).textTheme.headline4!.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+            style:
+                Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
         Padding(
@@ -234,14 +236,14 @@ class OrderInfoRow extends StatelessWidget {
       children: [
         Text(
           text1,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.grey),
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.grey),
         ),
         const SizedBox(
           height: 8,
         ),
         Text(
           text2,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
         )
       ],
     );

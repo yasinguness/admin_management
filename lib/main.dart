@@ -1,5 +1,6 @@
+import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/provider_setup.dart';
-import 'package:admin_management/ui/home/home.dart';
+import 'package:admin_management/ui/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
-      child: const MaterialApp(title: 'Material App', home: HomeScreen()),
+      child: const MaterialApp(
+        title: 'Admin Management',
+        initialRoute: RouteConst.homeScreen,
+        onGenerateRoute: generateRoute,
+      ),
     );
   }
 }

@@ -21,9 +21,9 @@ class OrderDetail extends StatelessWidget {
               ItemRow(
                 asset: "assets/images/GLASS-2.png",
                 itemName: ordr.coffeeList![index].name,
-                itemPrice: order.coffeeList![index].mediumPrice,
-                coffeSize: order.coffeeList![index].coffeeSize,
-                itemQuantity: order.coffeeList![index].quantitiy,
+                itemPrice: ordr.coffeeList![index].mediumPrice,
+                coffeSize: ordr.coffeeList![index].coffeeSize,
+                itemQuantity: ordr.coffeeList![index].quantitiy,
               ),
               const SizedBox(
                 height: 2,

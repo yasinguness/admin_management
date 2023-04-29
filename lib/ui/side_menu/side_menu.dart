@@ -2,10 +2,12 @@ import 'package:admin_management/common/widgets/drawer_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({super.key});
+  final currentIndex;
+  const SideMenu({super.key, this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
+    var index = 0;
     return Drawer(
       backgroundColor: Colors.black,
       child: ListView(
@@ -41,9 +43,12 @@ class SideMenu extends StatelessWidget {
             press: () {},
           ),
           DrawerListTile(
-            title: "Store",
+            title: "Product List",
             svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
+            press: () {
+              /* index = 4;
+              currentIndex = index; */
+            },
           ),
           DrawerListTile(
             title: "Notification",

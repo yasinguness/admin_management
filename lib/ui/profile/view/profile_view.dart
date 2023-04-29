@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Expanded(
-      child: SingleChildScrollView(
-        child: _column(context, size),
-      ),
+    return SingleChildScrollView(
+      child: _column(context, size),
     );
   }
 
   Column _column(BuildContext context, Size size) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -118,7 +115,6 @@ class ProfileView extends StatelessWidget {
 
   Column _title(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
