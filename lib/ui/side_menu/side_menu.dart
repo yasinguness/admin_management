@@ -1,13 +1,19 @@
+import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/common/widgets/drawer_list_tile.dart';
 import 'package:flutter/material.dart';
 
-class SideMenu extends StatelessWidget {
-  final currentIndex;
-  const SideMenu({super.key, this.currentIndex});
+class SideMenu extends StatefulWidget {
+  final void Function(int index) press;
+  const SideMenu({super.key, required this.press});
 
   @override
+  State<SideMenu> createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  @override
   Widget build(BuildContext context) {
-    var index = 0;
+    int index = 0;
     return Drawer(
       backgroundColor: Colors.black,
       child: ListView(
@@ -23,48 +29,51 @@ class SideMenu extends StatelessWidget {
             ),
           )),
           DrawerListTile(
-            title: "Dashboard",
+            title: "Siparişler",
             svgSrc: "assets/icons/menu_dashbord.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Transaction",
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Task",
-            svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Documents",
-            svgSrc: "assets/icons/menu_doc.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Product List",
-            svgSrc: "assets/icons/menu_store.svg",
             press: () {
-              /* index = 4;
-              currentIndex = index; */
+              index = 0;
+              widget.press(index);
             },
           ),
           DrawerListTile(
-            title: "Notification",
-            svgSrc: "assets/icons/menu_notification.svg",
-            press: () {},
+            title: "Ürün Listesi",
+            svgSrc: "assets/icons/menu_store.svg",
+            press: () {
+              index = 1;
+              widget.press(index);
+            },
           ),
           DrawerListTile(
-            title: "Profile",
-            svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            title: "Ürün Ekle",
+            svgSrc: "assets/icons/product.svg",
+            press: () {
+              index = 2;
+              widget.press(index);
+            },
           ),
+          /*  DrawerListTile(
+            title: "Yardım Ve Destek",
+            svgSrc: "assets/icons/support.svg",
+            press: () {
+              
+            },
+          ) */
           DrawerListTile(
-            title: "Settings",
+            title: "Ayarlar",
             svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
+            press: () {
+              index = 3;
+              widget.press(index);
+            },
           ),
+          DrawerListTile(
+            title: "Çıkış Yap",
+            svgSrc: "assets/icons/logout.svg",
+            press: () {
+              Navigator.pushNamedAndRemoveUntil(context, RouteConst.loginView, (route) => false);
+            },
+          )
         ],
       ),
     );
