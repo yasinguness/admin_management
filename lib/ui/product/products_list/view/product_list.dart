@@ -1,6 +1,10 @@
 import 'package:admin_management/common/constants/colors.dart';
 import 'package:admin_management/common/widgets/category_bar_widget.dart';
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/services/product/product_service.dart';
+import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/product/products_list/view/update_product.dart';
+import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -16,95 +20,106 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     var categoryList = ["Tümü", "Kahveler", "Tatlılar"];
 
     var size = MediaQuery.of(context).size;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 3,
-          child: SingleChildScrollView(
-            child: Column(children: [
-              _searchBar(),
-              SizedBox(
-                width: size.width,
-                height: 50,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: categoryList.map((element) {
-                      return Expanded(child: CategoryBar(text: element));
-                    }).toList()),
-              ),
-              _productList(size, context)
-            ]),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: size.height,
-            margin: const EdgeInsets.only(left: 12),
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BaseView<ProductListViewModel>(
+      onModelReady: (p0) => p0.getProducts(),
+      model: ProductListViewModel(productService: locator<ProductService>()),
+      builder: (context, value, widget) => value.busy
+          ? const CircularProgressIndicator()
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: size.height * 0.05,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [_profilePic(), _profileName(context)],
-                        ),
-                        SizedBox(
-                          height: size.height * 0.05,
-                        ),
-                        const Divider(
-                          thickness: 2,
-                        )
-                      ],
-                    )),
-                Expanded(
-                    flex: 11,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          StatisticCard(size: size),
-                          StatisticCard(size: size),
-                          StatisticCard(size: size),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(4),
-                            height: size.height * 0.1,
-                            width: size.width,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                                onPressed: () {},
-                                child: Text(
-                                  "Yeni Ürün Ekle",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(fontWeight: FontWeight.w400, color: AppColors.white, fontSize: 20),
-                                )),
-                          )
-                        ],
+                  flex: 3,
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      _searchBar(),
+                      SizedBox(
+                        width: size.width,
+                        height: 50,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: categoryList.map((element) {
+                              return Expanded(child: CategoryBar(text: element));
+                            }).toList()),
                       ),
-                    ))
+                      _productList(size, context, value)
+                    ]),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: size.height,
+                    margin: const EdgeInsets.only(left: 12),
+                    color: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [_profile(size, context), _statisticCardsAndButton(size, context)],
+                    ),
+                  ),
+                )
               ],
             ),
-          ),
-        )
-      ],
     );
+  }
+
+  Expanded _profile(Size size, BuildContext context) {
+    return Expanded(
+        flex: 2,
+        child: Column(
+          children: [
+            SizedBox(
+              height: size.height * 0.05,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [_profilePic(), _profileName(context)],
+            ),
+            SizedBox(
+              height: size.height * 0.05,
+            ),
+            const Divider(
+              thickness: 2,
+            )
+          ],
+        ));
+  }
+
+  Expanded _statisticCardsAndButton(Size size, BuildContext context) {
+    return Expanded(
+        flex: 11,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              StatisticCard(size: size),
+              StatisticCard(size: size),
+              StatisticCard(size: size),
+              const SizedBox(
+                height: 8,
+              ),
+              Container(
+                margin: const EdgeInsets.all(4),
+                height: size.height * 0.1,
+                width: size.width,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                    onPressed: () {},
+                    child: Text(
+                      "Yeni Ürün Ekle",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(fontWeight: FontWeight.w400, color: AppColors.white, fontSize: 20),
+                    )),
+              )
+            ],
+          ),
+        ));
   }
 
   Text _profileName(BuildContext context) {
@@ -129,7 +144,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     );
   }
 
-  Padding _productList(Size size, BuildContext context) {
+  Padding _productList(Size size, BuildContext context, ProductListViewModel value) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -139,7 +154,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 4,
-              children: List.generate(15, (index) => _productCart(context)),
+              children: List.generate(value.productList!.length, (index) => _productCart(context, value, index)),
             ),
           ),
         ],
@@ -166,13 +181,13 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
         ));
   }
 
-  Stack _productCart(BuildContext context) {
+  Stack _productCart(BuildContext context, ProductListViewModel value, int index) {
     return Stack(
-      children: [_card(context), _deleteButton()],
+      children: [_card(context, value, index), _deleteButton()],
     );
   }
 
-  Card _card(BuildContext context) {
+  Card _card(BuildContext context, ProductListViewModel value, int index) {
     return Card(
       elevation: 4,
       child: Container(
@@ -186,8 +201,8 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 child: Column(
                   children: [
                     Expanded(flex: 2, child: _coffeeImage()),
-                    Expanded(flex: 1, child: _coffeeName(context)),
-                    Expanded(flex: 2, child: _description()),
+                    Expanded(flex: 1, child: _productName(context, value, index)),
+                    Expanded(flex: 2, child: _description(value, index)),
                   ],
                 ),
               ),
@@ -198,7 +213,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 flex: 1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [_price(context), _button(context)],
+                  children: [_price(context, value, index), _button(context)],
                 ),
               )
             ],
@@ -245,27 +260,27 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     );
   }
 
-  Padding _coffeeName(BuildContext context) {
+  Padding _productName(BuildContext context, ProductListViewModel value, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Text(
-        "Coffee Name",
+        value.productList![index].name!,
         style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  Text _description() {
-    return const Text(
-      "Coffee Description asjdjasfasdlkaslfasldlkaskflaslkdaslkdaslkasdlaflkasjdfşlasjfla",
+  Text _description(ProductListViewModel value, int index) {
+    return Text(
+      value.productList![index].description ?? " ",
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Text _price(BuildContext context) {
+  Text _price(BuildContext context, ProductListViewModel value, int index) {
     return Text(
-      "15 TL",
+      value.productList![index].price.toString(),
       style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
     );
   }

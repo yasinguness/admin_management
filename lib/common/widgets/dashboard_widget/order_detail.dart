@@ -1,47 +1,40 @@
-import 'package:admin_management/network/model/order.dart';
-import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_model.dart';
+import 'package:admin_management/network/model/order/order.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetail extends StatelessWidget {
-  final Order order;
-  final DashboardViewModel dashboardViewModel;
-  final int? quantity;
-  const OrderDetail({super.key, this.quantity, required this.order, required this.dashboardViewModel});
+  final OrderModel order;
+  const OrderDetail({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: dashboardViewModel.getOrder(order.id!),
-      builder: (context, snapshot) {
-        var ordr = snapshot.data;
-        return ListView.builder(
-          itemCount: ordr.coffeeList.lenght,
-          itemBuilder: (context, index) => Column(
-            children: [
-              ItemRow(
-                asset: "assets/images/GLASS-2.png",
-                itemName: ordr.coffeeList![index].name,
-                itemPrice: ordr.coffeeList![index].mediumPrice,
-                coffeSize: ordr.coffeeList![index].coffeeSize,
-                itemQuantity: ordr.coffeeList![index].quantitiy,
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              /* ItemRow(
-                      asset: "assets/images/TREAT_0.png",
-                      itemName: order.treat?.first.name!,
-                      itemQuantity: 2,
-                      itemPrice: 24) */
-            ],
+    return Column(children: [
+      Expanded(
+        child: SingleChildScrollView(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const Divider(
+              thickness: 1,
+              color: Colors.grey,
+            ),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: order.products!.length,
+            itemBuilder: (context, index) => ItemRow(
+              asset: "assets/images/GLASS-2.png",
+              itemName: order.products![index].name,
+              itemPrice: order.products![index].price,
+              coffeSize: order.products![index].size,
+              itemQuantity: order.products![index].quantitiy ?? 1,
+            ),
+
+            /* ItemRow(
+                            asset: "assets/images/TREAT_0.png",
+                            itemName: order.treat?.first.name!,
+                            itemQuantity: 2,
+                            itemPrice: 24) */
           ),
-        );
-      },
-    );
+        ),
+      ),
+    ]);
   }
 
   /* else {

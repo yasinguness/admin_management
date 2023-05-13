@@ -1,10 +1,10 @@
+import 'package:admin_management/common/widgets/dashboard_widget/order_detail.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/order_item.dart';
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../common/widgets/dashboard_widget/order_detail.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -16,6 +16,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size; // Değişkeni almak için Provider.of kullanılır
+
     return BaseView<DashboardViewModel>(
       builder: (context, value, widget) => value.busy
           ? const Center(
@@ -25,69 +27,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Container(
-                    color: Colors.grey.shade300,
-                    child: Column(
-                      children: [_header(context), _tabs(), _orderItem(value)],
-                    ),
-                  ),
+                  child: _orderList(context, value, size),
                 ),
                 Expanded(
                   flex: 7,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                          //crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                children: [
-                                  _title(context),
-                                  _headerInfoRow(value),
-                                  const SizedBox(
-                                    height: 32,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 8,
-                              child: OrderDetail(
-                                order: value.order!,
-                                dashboardViewModel: Provider.of<DashboardViewModel>(context),
-                                /* asset: "assets/images/GLASS-2.png",
-                                    itemName: value.order!.coffeeList![index].name,
-                                    itemPrice: value.order!.coffeeList![index].mediumPrice,
-                                    coffeSize: value.order!.coffeeList![index].coffeeSize,
-                                    itemQuantity: value.order!.coffeeList![index].quantitiy, */
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                    height: 60,
-                                    width: 180,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700),
-                                      onPressed: () {},
-                                      child: const Text("Siparişi Onayla"),
-                                    )),
-                              ),
-                            )
-                          ]),
-                    ),
-                  ),
+                  child: _detail(context, value, size),
                 )
               ],
             ),
-      model: DashboardViewModel(api: Provider.of(context)),
+      model: DashboardViewModel(orderService: locator<OrderService>()),
       onModelReady: (p0) => p0.fetchOrders(),
+    );
+  }
+
+  Container _orderList(BuildContext context, DashboardViewModel value, Size size) {
+    return Container(
+      color: Colors.grey.shade300,
+      child: Column(
+        children: [_header(context), _tabs(), _orderItem(value, size)],
+      ),
+    );
+  }
+
+  Padding _detail(BuildContext context, DashboardViewModel value, Size size) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [_titleAndHeader(context, value), _orderDetail(value, size), _button()]),
+      ),
+    );
+  }
+
+  Expanded _titleAndHeader(BuildContext context, DashboardViewModel value) {
+    return Expanded(
+      flex: 2,
+      child: Column(
+        children: [
+          _title(context),
+          _headerInfoRow(value),
+          const SizedBox(
+            height: 32,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Expanded _orderDetail(DashboardViewModel value, Size size) {
+    return Expanded(
+      flex: 8,
+      child: value.busy
+          ? const Center(child: CircularProgressIndicator())
+          : OrderDetail(
+              order: value.order!,
+            ),
+    );
+  }
+
+  Expanded _button() {
+    return Expanded(
+      flex: 1,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+            height: 60,
+            width: 180,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700),
+              onPressed: () {},
+              child: const Text("Siparişi Onayla"),
+            )),
+      ),
     );
   }
 
@@ -109,14 +123,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               color: Colors.grey,
             ),
             Expanded(
-              child: OrderInfoRow(text1: "İsim", text2: value.order!.ordersOwner!),
+              child: OrderInfoRow(text1: "İsim", text2: value.order!.customer!.name!),
             ),
             const VerticalDivider(
               thickness: 1,
               color: Colors.grey,
             ),
             Expanded(
-              child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.tableNumber.toString()),
+              child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.customer!.qrNo.toString()),
             ),
             const VerticalDivider(
               thickness: 1,
@@ -148,13 +162,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  SizedBox _orderItem(DashboardViewModel value) {
+  SizedBox _orderItem(DashboardViewModel value, Size size) {
     return SizedBox(
-      height: 500,
+      height: size.height * 0.8,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: value.orders!.length,
+          itemCount: value.orders?.length,
           itemBuilder: (context, index) {
             value.indexx = index;
             return GestureDetector(
