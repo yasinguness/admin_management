@@ -1,6 +1,6 @@
 import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/ui/auth/sign_in/view/login.dart';
-import 'package:admin_management/ui/dashboard_screen/dashboard.dart';
+import 'package:admin_management/ui/dashboard/view/dashboard.dart';
 import 'package:admin_management/ui/home/home.dart';
 import 'package:admin_management/ui/product/products_list/view/product_list.dart';
 import 'package:admin_management/ui/product/upload_product/view/upload_product.dart';

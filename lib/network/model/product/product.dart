@@ -27,7 +27,8 @@ class ProductModel {
       this.size,
       this.quantitiy,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.isSweet});
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
   Map<dynamic, dynamic> toJson() => _$ProductModelToJson(this);

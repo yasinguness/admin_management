@@ -18,7 +18,8 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       quantitiy: json['quantitiy'] as int?,
       createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
       updatedAt: json['updatedAt'] == null ? null : DateTime.parse(json['updatedAt'] as String),
-    )..isSweet = json['isSweet'] as String?;
+      isSweet: json['isSweet'] as String?,
+    );
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) => <String, dynamic>{
       '_id': instance.id,

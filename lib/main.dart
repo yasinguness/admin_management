@@ -1,8 +1,9 @@
 import 'package:admin_management/common/constants/route_const.dart';
-import 'package:admin_management/common/provider/size_provider.dart';
+import 'package:admin_management/common/provider/order_provider.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/ui/router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setupLocator();
@@ -15,10 +16,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Admin Management',
-      initialRoute: RouteConst.homeScreen,
-      onGenerateRoute: generateRoute,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(),
+        )
+      ],
+      child: const MaterialApp(
+        title: 'Admin Management',
+        initialRoute: RouteConst.homeScreen,
+        onGenerateRoute: generateRoute,
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
-import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_model.dart';
+import 'package:admin_management/ui/dashboard/view_model/dashboard_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;

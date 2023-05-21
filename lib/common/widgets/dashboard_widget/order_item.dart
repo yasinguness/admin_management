@@ -2,22 +2,15 @@ import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/model/order/order.dart';
 import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
-import 'package:admin_management/ui/dashboard_screen/view_model/dashboard_view_model.dart';
+import 'package:admin_management/ui/dashboard/view_model/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderItem extends StatefulWidget {
   final OrderModel item;
-  final void Function()? onTap;
-  final String? assetName;
-  final double? coffePrice;
-  final double? treatPrice;
+
   const OrderItem({
     super.key,
-    this.onTap,
-    this.assetName,
-    this.coffePrice,
-    this.treatPrice,
     required this.item,
   });
 
@@ -30,6 +23,7 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return BaseView<DashboardViewModel>(
         builder: (context, value, widt) {
           DateTime serverDateTime = DateTime.parse(widget.item.createdAt.toString());
@@ -38,15 +32,15 @@ class _OrderItemState extends State<OrderItem> {
           return SingleChildScrollView(
               child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: _orderCard(formattedTime, context),
+            child: _orderCard(formattedTime, context, size),
           ));
         },
         model: DashboardViewModel(orderService: locator<OrderService>()));
   }
 
-  SizedBox _orderCard(String formattedTime, BuildContext context) {
+  SizedBox _orderCard(String formattedTime, BuildContext context, Size size) {
     return SizedBox(
-      height: 80,
+      height: size.height * 0.09,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 2,
@@ -71,12 +65,15 @@ class _OrderItemState extends State<OrderItem> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 2.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [_orderId(), _orderTime(formattedTime)],
+        Expanded(
+          flex: 2,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [_orderId(), _orderTime(formattedTime)],
+            ),
           ),
         ),
         _price(context)
@@ -108,11 +105,15 @@ class _OrderItemState extends State<OrderItem> {
     );
   }
 
-  Padding _price(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 2.0),
-      child: Text("Total Order: Statik 50",
-          style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold)),
+  Expanded _price(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 2.0),
+        child: Text("Total : Statik 50",
+            overflow: TextOverflow.clip,
+            maxLines: 2,
+            style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold)),
+      ),
     );
   }
 }
