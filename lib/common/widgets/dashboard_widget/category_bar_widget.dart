@@ -2,40 +2,43 @@ import 'package:admin_management/common/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class CategoryBar extends StatefulWidget {
-  final String text;
-  const CategoryBar({super.key, required this.text});
+  final TabController controller;
+  const CategoryBar({
+    super.key,
+    required this.controller,
+  });
 
   @override
   State<CategoryBar> createState() => _CategoryBarState();
 }
 
 class _CategoryBarState extends State<CategoryBar> {
+  var categoryList = ["Tümü", "Kahveler", "Tatlılar"];
+
   @override
   Widget build(BuildContext context) {
-    bool isSelected = false;
-//TODO:Kategori onTap, isSelected işlemleri eksik. Bir çözüm bul
-    return GestureDetector(
-      onTap: () {},
+    return Container(
+      width: 200,
+      height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Container(
-        width: 200,
-        height: 50,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? AppColors.brown : AppColors.white,
+            color: AppColors.white,
             boxShadow: <BoxShadow>[BoxShadow(color: Colors.grey.shade600, spreadRadius: 1, blurRadius: 15)],
           ),
-          child: Center(
-              child: Text(
-            widget.text,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: isSelected ? Colors.white : AppColors.brown, fontWeight: FontWeight.w400),
+          child: TabBar(
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                12.0,
+              ),
+              color: AppColors.brown,
+            ),
+            labelColor: AppColors.white,
+            unselectedLabelColor: Colors.black,
+            controller: widget.controller,
+            tabs: categoryList.map((e) => Tab(text: e)).toList(),
           )),
-        ),
-      ),
     );
   }
 }

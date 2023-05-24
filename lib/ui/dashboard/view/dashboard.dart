@@ -163,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
         value.indexx = index;
         return GestureDetector(
             onTap: () {
-              value.getOrder(value.orderProvider!.inProgressList[index].id!);
+              value.getInProgress(value.orderProvider!.inProgressList[index].id!);
             },
             child: OrderItem(item: value.orderProvider!.inProgressList[index]));
       },
@@ -177,7 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
         value.indexx = index;
         return GestureDetector(
             onTap: () {
-              value.getOrder(value.orderProvider!.completedList[index].id!);
+              value.getCompleted(value.orderProvider!.completedList[index].id!);
             },
             child: OrderItem(item: value.orderProvider!.completedList[index]));
       },
@@ -271,10 +271,11 @@ Column _pending(DashboardViewModel value) {
       OrderDetail(
         order: value.order,
       ),
-      TabViewButton(onPressed: () {
-        value.addOrderToInProgressList(value.order!);
-        value.orderProvider!.removeOrder(value.order!);
-      })
+      TabViewButton(
+          text: "Sipariş Hazırla",
+          onPressed: () {
+            value.addOrderToInProgressList(value.order!);
+          })
     ],
   );
 }
@@ -282,19 +283,24 @@ Column _pending(DashboardViewModel value) {
 Column _completed(DashboardViewModel value) {
   return Column(children: [
     Expanded(
-        child: SingleChildScrollView(
-      child: ListView.separated(
-          itemBuilder: (context, index) => ItemRow(product: value.order!.products![index]),
-          separatorBuilder: (context, index) => const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: value.order!.products!.length),
-    )),
+        child: value.completedOrder == null
+            ? const SizedBox.shrink()
+            : SingleChildScrollView(
+                child: ListView.separated(
+                    itemBuilder: (context, index) => ItemRow(product: value.completedOrder!.products![index]),
+                    separatorBuilder: (context, index) => const Divider(
+                          thickness: 1,
+                          color: Colors.grey,
+                        ),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: value.order!.products!.length),
+              )),
     TabViewButton(
-      onPressed: () {},
+      text: "Sipariş Sil",
+      onPressed: () {
+        value.deleteCompletedOrder(value.order!);
+      },
     )
   ]);
 }
@@ -302,19 +308,22 @@ Column _completed(DashboardViewModel value) {
 Column _inProgress(DashboardViewModel value) {
   return Column(children: [
     Expanded(
-        child: SingleChildScrollView(
-      child: ListView.separated(
-        itemCount: value.order!.products!.length,
-        itemBuilder: (context, index) => ItemRow(product: value.order!.products![index]),
-        separatorBuilder: (context, index) => const Divider(
-          thickness: 1,
-          color: Colors.grey,
-        ),
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-      ),
-    )),
+        child: value.iProgressOrder == null
+            ? const SizedBox.shrink()
+            : SingleChildScrollView(
+                child: ListView.separated(
+                  itemCount: value.iProgressOrder!.products!.length,
+                  itemBuilder: (context, index) => ItemRow(product: value.iProgressOrder!.products![index]),
+                  separatorBuilder: (context, index) => const Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                ),
+              )),
     TabViewButton(
+      text: "Sipariş Tamamlandı",
       onPressed: () {
         value.addOrderToCompletedList(value.order!);
         //value.orderProvider!.removeOrder(value.order!);

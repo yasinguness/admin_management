@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TabViewButton extends StatelessWidget {
+  final String text;
   final void Function()? onPressed;
-  const TabViewButton({super.key, this.onPressed});
+  const TabViewButton({super.key, this.onPressed, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class TabViewButton extends StatelessWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade700),
             onPressed: onPressed,
-            child: const Text("Siparişi Onayla"),
+            child: Text(text),
           )),
     );
   }

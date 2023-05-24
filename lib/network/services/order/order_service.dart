@@ -5,7 +5,7 @@ import 'package:admin_management/network/model/order/order.dart';
 import 'package:admin_management/network/services/base_service.dart';
 
 class OrderService extends BaseService {
-  Future<List<OrderModel>?> fetchOrders() async {
+  Future<List<OrderModel>> fetchOrders() async {
     final response = await dio.get('$BASE_URL/order/get-order');
 
     if (response.statusCode == HttpStatus.ok) {
@@ -14,7 +14,7 @@ class OrderService extends BaseService {
         return datas.map((e) => OrderModel.fromJson(e)).toList();
       }
     }
-    return null;
+    return [];
   }
 
   //List<OrderModel> postFromJson(data) => List<OrderModel>.from(data.map((x) => OrderModel.fromJson(x)));
@@ -42,6 +42,20 @@ class OrderService extends BaseService {
       }
     } catch (e) {
       print("Servis hata");
+    }
+    return null;
+  }
+
+  Future<bool?> deleteOrder(String id) async {
+    try {
+      final response = await dio.delete("$BASE_URL/order/delete-order/$id");
+      if (response.statusCode == HttpStatus.ok) {
+        print("Sipariş Silindi");
+        return true;
+      }
+    } catch (e) {
+      print(e);
+      return false;
     }
     return null;
   }

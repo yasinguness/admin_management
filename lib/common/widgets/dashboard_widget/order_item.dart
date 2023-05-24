@@ -71,12 +71,12 @@ class _OrderItemState extends State<OrderItem> {
             padding: const EdgeInsets.only(left: 2.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [_orderId(), _orderTime(formattedTime)],
             ),
           ),
         ),
-        _price(context)
+        //_price(context)
       ],
     );
   }
@@ -86,6 +86,7 @@ class _OrderItemState extends State<OrderItem> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         "${widget.item.customer!.id}",
+        style: const TextStyle(fontSize: 22),
       ),
     );
   }
@@ -95,11 +96,14 @@ class _OrderItemState extends State<OrderItem> {
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 8.0),
-          child: Icon(Icons.access_time_filled, size: 16),
+          child: Icon(Icons.access_time_filled, size: 20),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 4),
-          child: Text(formattedTime),
+          child: Text(
+            formattedTime,
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
       ],
     );

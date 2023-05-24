@@ -9,18 +9,25 @@ class OrderProvider extends ChangeNotifier {
 
   void addOrderToInProgressList(OrderModel model) {
     inProgressList.add(model);
-    removeOrder(model);
+    ordersList.removeWhere((order) => order == model);
+    notifyListeners();
+  }
+
+/* void removeOrder(OrderModel model) {
+  ordersList.removeWhere((order) => order == model);
+  inProgressList.removeWhere((order) => order == model);
+  completedList.removeWhere((order) => order == model);
+  notifyListeners();
+} */
+
+  void addOrderToCompletedList(OrderModel model) {
+    completedList.add(model);
+    inProgressList.removeWhere((order) => order == model);
     notifyListeners();
   }
 
   void removeOrder(OrderModel model) {
-    ordersList.remove(model);
-    notifyListeners();
-  }
-
-  void addOrderToCompletedList(OrderModel model) {
-    completedList.add(model);
-    inProgressList.remove(model);
+    completedList.removeWhere((order) => order == model);
     notifyListeners();
   }
 }

@@ -13,6 +13,9 @@ class DashboardViewModel extends BaseModel {
   List<OrderModel>? orders;
 
   OrderModel? order;
+  OrderModel? iProgressOrder;
+  OrderModel? completedOrder;
+
   bool isSelected = false;
   int indexx = 0;
 
@@ -22,21 +25,40 @@ class DashboardViewModel extends BaseModel {
     setBusy(false);
   }
 
+  Future getInProgress(String id) async {
+    setBusy(true);
+    iProgressOrder = await orderService!.getOrderById(id);
+    setBusy(false);
+  }
+
+  Future getCompleted(String id) async {
+    setBusy(true);
+    completedOrder = await orderService!.getOrderById(id);
+    setBusy(false);
+  }
+
+  Future deleteOrder(String id) async {
+    await orderService!.deleteOrder(id);
+  }
+
   Future fetchOrders() async {
     setBusy(true);
     orders = await orderService!.fetchOrders();
-    orderProvider!.ordersList = orders!;
-    await getOrder(orders!.first.id!);
+    orderProvider!.ordersList.addAll(orders!);
+    await getOrder(orderProvider!.ordersList.first.id!);
     setBusy(false);
   }
 
   Future addOrderToInProgressList(OrderModel model) async {
     orderProvider!.addOrderToInProgressList(model);
-    setBusy(false);
   }
 
   Future addOrderToCompletedList(OrderModel model) async {
     orderProvider!.addOrderToCompletedList(model);
-    setBusy(false);
+  }
+
+  Future deleteCompletedOrder(OrderModel model) async {
+    orderProvider!.removeOrder(model);
+    deleteOrder(model.id!);
   }
 }

@@ -19,6 +19,7 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    TabController controller = TabController(length: 3, vsync: this);
     var categoryList = ["Tümü", "Kahveler", "Tatlılar"];
 
     var size = MediaQuery.of(context).size;
@@ -38,14 +39,18 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                         _searchBar(),
                         SizedBox(
                           width: size.width,
-                          height: 50,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: categoryList.map((element) {
-                                return Expanded(child: CategoryBar(text: element));
-                              }).toList()),
+                          //height: 50,
+                          child: CategoryBar(controller: controller),
                         ),
-                        _productList(size, context, value)
+                        SizedBox(
+                          width: size.width,
+                          height: size.height * 0.8,
+                          child: TabBarView(controller: controller, children: [
+                            _productList(size, context, value),
+                            _coffeeList(size, context, value),
+                            _sweetList(size, context, value)
+                          ]),
+                        )
                       ]),
                     ),
                   ),
@@ -169,6 +174,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
@@ -176,6 +182,44 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
               shrinkWrap: true,
               crossAxisCount: 4,
               children: List.generate(value.productList!.length, (index) => _productCart(context, value, index)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _coffeeList(Size size, BuildContext context, ProductListViewModel value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 4,
+              children: List.generate(value.coffeeList!.length, (index) => _productCart(context, value, index)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _sweetList(Size size, BuildContext context, ProductListViewModel value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 4,
+              children: List.generate(value.sweetList!.length, (index) => _productCart(context, value, index)),
             ),
           ),
         ],

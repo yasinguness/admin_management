@@ -1,8 +1,12 @@
+import 'package:admin_management/common/provider/product_provider.dart';
+import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/model/product/product.dart';
+import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class UpdateProduct extends StatelessWidget {
+class UpdateProduct extends StatefulWidget {
   final ProductModel product;
 
   const UpdateProduct({
@@ -11,15 +15,30 @@ class UpdateProduct extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController priceText = TextEditingController(text: product.price.toString());
-    final TextEditingController smallPrice = TextEditingController(text: product.smallPrice.toString());
-    final TextEditingController largePrice = TextEditingController(text: product.largePrice.toString());
-    final TextEditingController nameText = TextEditingController(text: product.name);
-    final TextEditingController descriptionText = TextEditingController(text: product.description);
+  State<UpdateProduct> createState() => _UpdateProductState();
+}
 
+class _UpdateProductState extends State<UpdateProduct> {
+  TextEditingController priceText = TextEditingController();
+  TextEditingController smallPrice = TextEditingController();
+  TextEditingController largePrice = TextEditingController();
+  TextEditingController nameText = TextEditingController();
+  TextEditingController descriptionText = TextEditingController();
+  @override
+  void initState() {
+    descriptionText.text = widget.product.description!;
+    nameText.text = widget.product.name!;
+    priceText.text = widget.product.price!.toString();
+    smallPrice.text = widget.product.smallPrice!.toString();
+    largePrice.text = widget.product.largePrice!.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    ProductListViewModel productListViewModel = ProductListViewModel();
+    ProductListViewModel productListViewModel = ProductListViewModel(
+        productService: locator<ProductService>(), productProvider: Provider.of<ProductProvider>(context));
+    initState();
     return AlertDialog(
       content: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
@@ -47,7 +66,7 @@ class UpdateProduct extends StatelessWidget {
                     labelText: "Product Name", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
               ),
             ),
-            if (product.isSweet == "coffee") ...[
+            if (widget.product.isSweet == "coffee") ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: TextField(
@@ -81,7 +100,7 @@ class UpdateProduct extends StatelessWidget {
                       labelText: "Description", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
                 ),
               ),
-            ] else if (product.isSweet == "sweet") ...[
+            ] else if (widget.product.isSweet == "sweet") ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: TextField(
@@ -99,8 +118,21 @@ class UpdateProduct extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
-                    onPressed: () {
-                      productListViewModel.updateProduct(product.id!, product);
+                    onPressed: () async {
+                      widget.product.name = nameText.text;
+                      widget.product.description = descriptionText.text;
+                      widget.product.price = double.parse(priceText.text);
+                      widget.product.smallPrice = double.parse(smallPrice.text);
+                      widget.product.largePrice = double.parse(largePrice.text);
+
+                      bool isUpdated = await productListViewModel.updateProduct(widget.product.id!, widget.product);
+                      if (isUpdated) {
+                        setState(() {
+                          Navigator.pop(context);
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Güncellenemedi")));
+                      }
                       //TODO: Düzenle isteği çalışmıyor
                     },
                     child: const Text("Güncelle")),

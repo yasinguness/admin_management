@@ -28,9 +28,16 @@ class ProductService extends BaseService {
     }
   }
 
-  Future<bool?> updateProduct(String id, ProductModel model) async {
+  Future<bool?> updateProduct(String id, ProductModel? model) async {
     try {
-      final response = await dio.put("$BASE_URL/product/update-product/$id", data: model.toJson());
+      var updateData = {
+        "name": model?.name,
+        "description": model?.description,
+        "price": model?.price,
+        "smallPrice": model?.smallPrice,
+        "largePrice": model?.largePrice
+      };
+      final response = await dio.put("$BASE_URL/product/update-product/$id", data: updateData);
       if (response.statusCode == HttpStatus.ok) {
         print("Ürün Güncellendi");
         return true;
