@@ -14,7 +14,7 @@ class HomeViewModel extends BaseModel {
     const SettingsScreen(),
   ];
 
-  void selectedIndex(int index) {
+  void selectedIndex(int index) async {
     currentIndex = index;
     notifyListeners();
   }

@@ -11,9 +11,8 @@ class OrderDetail extends StatelessWidget {
     return Expanded(
       child: SingleChildScrollView(
         child: ListView.separated(
-          separatorBuilder: (context, index) => const Divider(
-            thickness: 1,
-            color: Colors.grey,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: 8,
           ),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,

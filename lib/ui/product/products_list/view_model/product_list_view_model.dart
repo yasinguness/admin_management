@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:admin_management/common/provider/product_provider.dart';
 import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
@@ -8,8 +10,12 @@ class ProductListViewModel extends BaseModel {
   ProductListViewModel({required this.productService, this.productProvider});
   ProductProvider? productProvider;
   List<ProductModel>? productList;
+  List<ProductModel>? searchProducts;
   List<ProductModel>? sweetList;
   List<ProductModel>? coffeeList;
+
+  final StreamController<List<ProductModel>> _productListController = StreamController<List<ProductModel>>.broadcast();
+  Stream<List<ProductModel>> get productListStream => _productListController.stream;
 
   bool? isUpdated;
 
@@ -56,5 +62,18 @@ class ProductListViewModel extends BaseModel {
     isUpdated = await productService.updateProduct(id, productProvider!.product);
     setBusy(false);
     return isUpdated;
+  }
+
+  Future searchProduct(String query) async {
+    setBusy(true);
+    productList = await productService.searchProduct(query);
+    _productListController.sink.add(productList!);
+    setBusy(false);
+  }
+
+  @override
+  void dispose() {
+    _productListController.close();
+    super.dispose();
   }
 }

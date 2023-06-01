@@ -113,7 +113,7 @@ class _OrderItemState extends State<OrderItem> {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(right: 2.0),
-        child: Text("Total : Statik 50",
+        child: Text(widget.item.totalPrice.toString(),
             overflow: TextOverflow.clip,
             maxLines: 2,
             style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold)),

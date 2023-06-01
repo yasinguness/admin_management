@@ -9,7 +9,6 @@ class UserModel {
   String? email;
   String? phone;
   String? password;
-  bool? isAdmin;
   String? profileImage;
   String? createdAt;
   String? updatedAt;
@@ -21,7 +20,6 @@ class UserModel {
       this.email,
       this.phone,
       this.password,
-      this.isAdmin,
       this.profileImage,
       this.createdAt,
       this.updatedAt});

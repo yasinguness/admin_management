@@ -3,10 +3,15 @@ import 'dart:io';
 import 'package:admin_management/common/constants/service_const.dart';
 import 'package:admin_management/network/model/order/order.dart';
 import 'package:admin_management/network/services/base_service.dart';
+import 'package:admin_management/network/services/shared_pref.dart';
+import 'package:dio/dio.dart';
 
 class OrderService extends BaseService {
   Future<List<OrderModel>> fetchOrders() async {
-    final response = await dio.get('$BASE_URL/order/get-order');
+    SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+    var token = shared.getString("token");
+    final response =
+        await dio.get('$BASE_URL/order/get-order', options: Options(headers: {'Authorization': "Bearer $token"}));
 
     if (response.statusCode == HttpStatus.ok) {
       final datas = response.data['data'];
@@ -34,11 +39,12 @@ class OrderService extends BaseService {
 
   Future<OrderModel?> getOrderById(String id) async {
     try {
-      final response = await dio.get("$BASE_URL/order/$id");
+      SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+      var token = shared.getString("token");
+      final response =
+          await dio.get("$BASE_URL/order/$id", options: Options(headers: {'Authorization': "Bearer $token"}));
       if (response.statusCode == HttpStatus.ok) {
-        final data = response.data['data'][0];
-
-        return OrderModel.fromJson(data);
+        return OrderModel.fromJson(response.data["data"]);
       }
     } catch (e) {
       print("Servis hata");
@@ -48,7 +54,10 @@ class OrderService extends BaseService {
 
   Future<bool?> deleteOrder(String id) async {
     try {
-      final response = await dio.delete("$BASE_URL/order/delete-order/$id");
+      SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+      var token = shared.getString("token");
+      final response = await dio.delete("$BASE_URL/order/delete-order/$id",
+          options: Options(headers: {'Authorization': "Bearer $token"}));
       if (response.statusCode == HttpStatus.ok) {
         print("Sipariş Silindi");
         return true;

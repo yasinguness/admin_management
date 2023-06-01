@@ -50,6 +50,9 @@ class _SideMenuState extends State<SideMenu> {
             press: () {
               index = 2;
               widget.press(index);
+              /*  if (mounted) {
+                Navigator.pushNamed(context, RouteConst.productLists);
+              } */ // Ürün ekleme işlemi tamamlandıktan sonra "Ürün Listesi" sayfasına yönlendirmek için await kullanın.
             },
           ),
           /*  DrawerListTile(

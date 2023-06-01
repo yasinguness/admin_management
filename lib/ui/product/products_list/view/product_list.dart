@@ -20,7 +20,6 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     TabController controller = TabController(length: 3, vsync: this);
-    var categoryList = ["Tümü", "Kahveler", "Tatlılar"];
 
     var size = MediaQuery.of(context).size;
     return BaseView<ProductListViewModel>(
@@ -36,7 +35,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                     flex: 3,
                     child: SingleChildScrollView(
                       child: Column(children: [
-                        _searchBar(),
+                        _searchBar(value),
                         SizedBox(
                           width: size.width,
                           //height: 50,
@@ -227,10 +226,13 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     );
   }
 
-  Padding _searchBar() {
+  Padding _searchBar(ProductListViewModel model) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: TextField(
+          onChanged: (value) {
+            model.searchProduct(value);
+          },
           cursorColor: Colors.grey,
           decoration: InputDecoration(
               fillColor: Colors.white,
@@ -266,7 +268,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 child: Column(
                   children: [
                     Expanded(flex: 2, child: _coffeeImage()),
-                    Expanded(flex: 1, child: _productName(context, value, index)),
+                    Expanded(flex: 2, child: _productName(context, value, index)),
                     Expanded(flex: 2, child: _description(value, index)),
                   ],
                 ),
@@ -346,7 +348,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Text(
         value.productList![index].name!,
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 24, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -354,15 +356,16 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   Text _description(ProductListViewModel value, int index) {
     return Text(
       value.productList![index].description ?? " ",
-      maxLines: 2,
+      maxLines: 4,
       overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 20),
     );
   }
 
   Text _price(BuildContext context, ProductListViewModel value, int index) {
     return Text(
       value.productList![index].price.toString(),
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
+      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 24, fontWeight: FontWeight.w500),
     );
   }
 

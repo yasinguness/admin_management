@@ -62,37 +62,47 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                 height: 20,
               ),
               UploadField(
-                hintText: "Small Price",
-                controller: model.smallPrice,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              UploadField(
-                hintText: "Medium Price",
+                hintText: "Price",
                 controller: model.price,
               ),
               const SizedBox(
                 height: 20,
               ),
-              UploadField(
-                hintText: "Large Price",
-                controller: model.largePrice,
+              DropdownButtonFormField(
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 16, color: const Color.fromARGB(255, 103, 102, 102)),
+                decoration: const InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                value: model.isSweet.text = "coffee",
+                items: const [
+                  DropdownMenuItem(value: "sweet", child: Text("Sweet")),
+                  DropdownMenuItem(value: "coffee", child: Text("Coffee")),
+                ],
+                onChanged: (value) {
+                  print(value);
+                  model.isSweet.text = value.toString();
+                },
               ),
               const SizedBox(
                 height: 20,
               ),
-              UploadField(
-                hintText: "Product Size",
-                controller: model.productSize,
-                //TODO: Product Size,isSweet gibleri farklı yap,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              UploadField(
-                hintText: "Product Type",
-                controller: model.isSweet,
+              DropdownButtonFormField(
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 16, color: const Color.fromARGB(255, 103, 102, 102)),
+                decoration: const InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(width: 1))),
+                value: model.productSize.text = 'S',
+                items: const [
+                  DropdownMenuItem(value: "S", child: Text("Small")),
+                  DropdownMenuItem(value: "M", child: Text("Medium")),
+                  DropdownMenuItem(value: "L", child: Text("Large")),
+                ],
+                onChanged: (value) {
+                  print(value);
+                  model.productSize.text = value.toString();
+                },
               ),
               const SizedBox(
                 height: 20,

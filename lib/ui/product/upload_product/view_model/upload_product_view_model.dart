@@ -21,9 +21,7 @@ class UploadProductViewModel extends BaseModel {
         image: "assets/images/GLASS-2.png",
         name: name.text,
         description: description.text,
-        largePrice: double.parse(largePrice.text),
         price: double.parse(price.text),
-        smallPrice: double.parse(smallPrice.text),
         size: productSize.text,
         isSweet: isSweet.text);
     bool? isAdded = await productService!.createProduct(model);

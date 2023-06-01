@@ -1,37 +1,58 @@
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/model/user/user.dart';
+import 'package:admin_management/network/services/user/user_service.dart';
+import 'package:admin_management/ui/base/base_view.dart';
+import 'package:admin_management/ui/settings/view_model/settings_view_model.dart';
 import 'package:flutter/material.dart';
 
-class PersonalInfo extends StatelessWidget {
-  final TextEditingController priceText = TextEditingController(text: "15");
-  final TextEditingController nameText = TextEditingController(text: "Americano");
-  final TextEditingController descriptionText = TextEditingController();
-  PersonalInfo({
+class PersonalInfo extends StatefulWidget {
+  const PersonalInfo({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<PersonalInfo> createState() => _PersonalInfoState();
+}
+
+class _PersonalInfoState extends State<PersonalInfo> {
+  final TextEditingController priceText = TextEditingController(text: "15");
+
+  final TextEditingController nameText = TextEditingController(text: "Americano");
+
+  final TextEditingController descriptionText = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Dialog(
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        width: 400,
-        height: 600,
-        child: Column(
-          children: [
-            _title(size, context),
-            const SizedBox(
-              height: 16,
+    return BaseView<SettingsViewModel>(
+      model: SettingsViewModel(userService: locator<UserService>(), model: UserModel()),
+      onModelReady: (p0) => p0.getUserProfile(),
+      builder: (context, value, widget) => value.busy
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Dialog(
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                width: 400,
+                height: 600,
+                child: Column(
+                  children: [
+                    _title(size, context),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    _image(),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    InfoRow(text: "${value.model!.name} ${value.model!.surname}", title: "Name - Surname:"),
+                    InfoRow(text: value.model!.email.toString(), title: "E-Mail:"),
+                    const InfoRow(text: "*********", title: "Password:"),
+                  ],
+                ),
+              ),
             ),
-            _image(),
-            const SizedBox(
-              height: 16,
-            ),
-            const InfoRow(text: "Muhammet Yasin Güneş", title: "Name - Surname:"),
-            const InfoRow(text: "m.yasinguness@gmail.com", title: "E-Mail:"),
-            const InfoRow(text: "*******", title: "Password:"),
-          ],
-        ),
-      ),
     );
   }
 

@@ -10,9 +10,6 @@ class ProductModel extends Equatable {
   String? image;
   String? size;
   double? price;
-  double? smallPrice;
-  double? largePrice;
-  int? quantitiy;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? isSweet;
@@ -23,10 +20,7 @@ class ProductModel extends Equatable {
       this.description,
       this.image,
       this.price,
-      this.largePrice,
-      this.smallPrice,
       this.size,
-      this.quantitiy,
       this.createdAt,
       this.updatedAt,
       this.isSweet});
@@ -36,6 +30,5 @@ class ProductModel extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object?> get props =>
-      [id, name, description, image, size, price, smallPrice, largePrice, quantitiy, createdAt, updatedAt, isSweet];
+  List<Object?> get props => [id, name, description, image, size, price, createdAt, updatedAt, isSweet];
 }

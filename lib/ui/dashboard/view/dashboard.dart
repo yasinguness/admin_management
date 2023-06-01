@@ -202,14 +202,11 @@ Padding _detail(BuildContext context, DashboardViewModel value, Size size, TabCo
 
 Expanded _titleAndHeader(BuildContext context, DashboardViewModel value) {
   return Expanded(
-    flex: 2,
+    flex: 1,
     child: Column(
       children: [
         _title(context),
         _headerInfoRow(value),
-        const SizedBox(
-          height: 32,
-        ),
       ],
     ),
   );
@@ -224,30 +221,27 @@ Text _title(BuildContext context) {
 
 IntrinsicHeight _headerInfoRow(DashboardViewModel value) {
   return IntrinsicHeight(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Row(
-        children: [
-          const VerticalDivider(
-            thickness: 1,
-            color: Colors.grey,
-          ),
-          Expanded(
-            child: OrderInfoRow(text1: "İsim", text2: value.order!.customer!.name!),
-          ),
-          const VerticalDivider(
-            thickness: 1,
-            color: Colors.grey,
-          ),
-          Expanded(
-            child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.customer!.qrNo.toString()),
-          ),
-          const VerticalDivider(
-            thickness: 1,
-            color: Colors.grey,
-          ),
-        ],
-      ),
+    child: Row(
+      children: [
+        const VerticalDivider(
+          thickness: 1,
+          color: Colors.grey,
+        ),
+        Expanded(
+          child: OrderInfoRow(text1: "İsim", text2: value.order!.customer!.name!),
+        ),
+        const VerticalDivider(
+          thickness: 1,
+          color: Colors.grey,
+        ),
+        Expanded(
+          child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.customer!.qrNo.toString()),
+        ),
+        const VerticalDivider(
+          thickness: 1,
+          color: Colors.grey,
+        ),
+      ],
     ),
   );
 }
@@ -268,6 +262,53 @@ Expanded _orderDetail(DashboardViewModel value, Size size, TabController control
 Column _pending(DashboardViewModel value) {
   return Column(
     children: [
+      /*  Row(
+        children: [
+          Expanded(
+              flex: 4,
+              child: Row(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Expanded(child: Text('Resim')),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                      child: Text(
+                    "Ürün Adı",
+                    maxLines: 2,
+                  )),
+                  Spacer(
+                    flex: 3,
+                  ),
+                  Expanded(
+                      child: Text(
+                    "Ürün Miktarı",
+                    maxLines: 2,
+                  )),
+                  Spacer(
+                    flex: 2,
+                  )
+                ],
+              )),
+          Expanded(
+              flex: 2,
+              child: Row(
+                children: const [
+                  Expanded(child: Text("Ürün Boyutu")),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(child: Text("Ürün Fiyatı")),
+                  Spacer(
+                    flex: 2,
+                  )
+                ],
+              ))
+        ], */
+
       OrderDetail(
         order: value.order,
       ),
@@ -287,11 +328,10 @@ Column _completed(DashboardViewModel value) {
             ? const SizedBox.shrink()
             : SingleChildScrollView(
                 child: ListView.separated(
-                    itemBuilder: (context, index) => ItemRow(product: value.completedOrder!.products![index]),
-                    separatorBuilder: (context, index) => const Divider(
-                          thickness: 1,
-                          color: Colors.grey,
+                    separatorBuilder: (context, index) => const SizedBox(
+                          height: 8,
                         ),
+                    itemBuilder: (context, index) => ItemRow(product: value.completedOrder!.products![index]),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: value.order!.products!.length),
@@ -312,12 +352,11 @@ Column _inProgress(DashboardViewModel value) {
             ? const SizedBox.shrink()
             : SingleChildScrollView(
                 child: ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 8,
+                  ),
                   itemCount: value.iProgressOrder!.products!.length,
                   itemBuilder: (context, index) => ItemRow(product: value.iProgressOrder!.products![index]),
-                  separatorBuilder: (context, index) => const Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                 ),
@@ -353,8 +392,11 @@ class OrderInfoRow extends StatelessWidget {
           height: 8,
         ),
         Text(
-          text2,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+          text2.toUpperCase(),
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
         )
       ],
     );

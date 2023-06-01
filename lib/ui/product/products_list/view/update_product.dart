@@ -29,8 +29,6 @@ class _UpdateProductState extends State<UpdateProduct> {
     descriptionText.text = widget.product.description!;
     nameText.text = widget.product.name!;
     priceText.text = widget.product.price!.toString();
-    smallPrice.text = widget.product.smallPrice!.toString();
-    largePrice.text = widget.product.largePrice!.toString();
   }
 
   @override
@@ -66,50 +64,23 @@ class _UpdateProductState extends State<UpdateProduct> {
                     labelText: "Product Name", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
               ),
             ),
-            if (widget.product.isSweet == "coffee") ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: smallPrice,
-                  decoration: const InputDecoration(
-                      labelText: "Small Price", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: TextField(
+                controller: priceText,
+                decoration: const InputDecoration(
+                    labelText: "Price", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: priceText,
-                  decoration: const InputDecoration(
-                      labelText: "Price", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: TextField(
+                controller: descriptionText,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                    labelText: "Description", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: largePrice,
-                  decoration: const InputDecoration(
-                      labelText: "Large Price", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: descriptionText,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                      labelText: "Description", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
-                ),
-              ),
-            ] else if (widget.product.isSweet == "sweet") ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: priceText,
-                  decoration: const InputDecoration(
-                      labelText: "Price", border: OutlineInputBorder(borderSide: BorderSide(width: 2))),
-                ),
-              )
-            ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
@@ -122,8 +93,6 @@ class _UpdateProductState extends State<UpdateProduct> {
                       widget.product.name = nameText.text;
                       widget.product.description = descriptionText.text;
                       widget.product.price = double.parse(priceText.text);
-                      widget.product.smallPrice = double.parse(smallPrice.text);
-                      widget.product.largePrice = double.parse(largePrice.text);
 
                       bool isUpdated = await productListViewModel.updateProduct(widget.product.id!, widget.product);
                       if (isUpdated) {
