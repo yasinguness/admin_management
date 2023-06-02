@@ -170,6 +170,9 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _productList(Size size, BuildContext context, ProductListViewModel value) {
+    if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
+      value.productList = value.searchProducts!;
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -233,6 +236,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
           onChanged: (value) {
             model.searchProduct(value);
           },
+          controller: model.searchQueryController,
           cursorColor: Colors.grey,
           decoration: InputDecoration(
               fillColor: Colors.white,

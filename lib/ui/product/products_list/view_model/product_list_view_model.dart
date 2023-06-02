@@ -4,6 +4,7 @@ import 'package:admin_management/common/provider/product_provider.dart';
 import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/base/base_model.dart';
+import 'package:flutter/cupertino.dart';
 
 class ProductListViewModel extends BaseModel {
   ProductService productService;
@@ -14,9 +15,7 @@ class ProductListViewModel extends BaseModel {
   List<ProductModel>? sweetList;
   List<ProductModel>? coffeeList;
 
-  final StreamController<List<ProductModel>> _productListController = StreamController<List<ProductModel>>.broadcast();
-  Stream<List<ProductModel>> get productListStream => _productListController.stream;
-
+  final TextEditingController searchQueryController = TextEditingController();
   bool? isUpdated;
 
 /*   final TextEditingController priceText = TextEditingController();
@@ -65,15 +64,7 @@ class ProductListViewModel extends BaseModel {
   }
 
   Future searchProduct(String query) async {
-    setBusy(true);
-    productList = await productService.searchProduct(query);
-    _productListController.sink.add(productList!);
+    searchProducts = await productService.searchProduct(query);
     setBusy(false);
-  }
-
-  @override
-  void dispose() {
-    _productListController.close();
-    super.dispose();
   }
 }
