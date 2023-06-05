@@ -1,14 +1,17 @@
 import 'package:admin_management/common/constants/colors.dart';
-import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/category_bar_widget.dart';
 import 'package:admin_management/common/widgets/statistic_card_widget.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
+import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/product/products_list/view/update_product.dart';
 import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
 
@@ -135,7 +138,8 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
           style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
           onPressed: () {
-            Navigator.pushNamed(context, RouteConst.uploadProduct);
+            context.router.push(const UploadProductRoute());
+            //Navigator.pushNamed(context, RouteConst.uploadProduct);
           },
           child: Text(
             "Yeni Ürün Ekle",
@@ -170,8 +174,15 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _productList(Size size, BuildContext context, ProductListViewModel value) {
-    if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
+/*     if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
       value.productList = value.searchProducts!;
+    } */
+
+    if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
+      value.productList = value.searchProducts;
+
+      value.sweetList = value.searchProducts!.where((element) => element.isSweet == "sweet").toList();
+      value.coffeeList = value.searchProducts!.where((element) => element.isSweet == "coffee").toList();
     }
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
@@ -183,7 +194,9 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 4,
-              children: List.generate(value.productList!.length, (index) => _productCart(context, value, index)),
+              children: List.generate(value.productList!.length, (index) {
+                return _productCart(context, value, index);
+              }),
             ),
           ),
         ],
@@ -192,6 +205,9 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _coffeeList(Size size, BuildContext context, ProductListViewModel value) {
+    /*  if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
+      value.coffeeList = value.searchProducts!;
+    } */
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -211,6 +227,10 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _sweetList(Size size, BuildContext context, ProductListViewModel value) {
+    /*  if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
+      value.sweetList = value.searchProducts!.where((element) => element.isSweet == "sweet").toList();
+      value.coffeeList = value.searchProducts!.where((element) => element.isSweet == "coffee").toList();
+    } */
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -271,7 +291,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 flex: 4,
                 child: Column(
                   children: [
-                    Expanded(flex: 2, child: _coffeeImage()),
+                    Expanded(flex: 2, child: _coffeeImage(value, index)),
                     Expanded(flex: 2, child: _productName(context, value, index)),
                     Expanded(flex: 2, child: _description(value, index)),
                   ],
@@ -312,7 +332,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                   child: const Text("Evet")),
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.router.pop();
                   },
                   child: const Text("Hayır"))
             ], content: const Text("Ürünü silmek istediğinize emin misiniz ?")),
@@ -335,11 +355,11 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
     );
   }
 
-  Container _coffeeImage() {
+  Container _coffeeImage(ProductListViewModel value, int index) {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: Image.asset(
-        "assets/images/GLASS-2.png",
+      child: CachedNetworkImage(
+        imageUrl: value.productList![index].image!.path,
         width: double.infinity,
         height: 100,
         fit: BoxFit.contain,
@@ -386,7 +406,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
               showDialog(
                 context: context,
                 builder: (context) {
-                  return UpdateProduct(product: value.productList![index]);
+                  return UpdateProductScreen(product: value.productList![index]);
                 },
               );
             },

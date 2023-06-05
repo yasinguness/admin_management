@@ -3,22 +3,25 @@ import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
+import 'package:auto_route/annotations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UpdateProduct extends StatefulWidget {
+@RoutePage()
+class UpdateProductScreen extends StatefulWidget {
   final ProductModel product;
 
-  const UpdateProduct({
+  const UpdateProductScreen({
     Key? key,
     required this.product,
   }) : super(key: key);
 
   @override
-  State<UpdateProduct> createState() => _UpdateProductState();
+  State<UpdateProductScreen> createState() => _UpdateProductScreenState();
 }
 
-class _UpdateProductState extends State<UpdateProduct> {
+class _UpdateProductScreenState extends State<UpdateProductScreen> {
   TextEditingController priceText = TextEditingController();
   TextEditingController smallPrice = TextEditingController();
   TextEditingController largePrice = TextEditingController();
@@ -26,6 +29,7 @@ class _UpdateProductState extends State<UpdateProduct> {
   TextEditingController descriptionText = TextEditingController();
   @override
   void initState() {
+    super.initState();
     descriptionText.text = widget.product.description!;
     nameText.text = widget.product.name!;
     priceText.text = widget.product.price!.toString();
@@ -36,7 +40,7 @@ class _UpdateProductState extends State<UpdateProduct> {
     var size = MediaQuery.of(context).size;
     ProductListViewModel productListViewModel = ProductListViewModel(
         productService: locator<ProductService>(), productProvider: Provider.of<ProductProvider>(context));
-    initState();
+
     return AlertDialog(
       content: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
@@ -55,7 +59,7 @@ class _UpdateProductState extends State<UpdateProduct> {
               height: 8,
             ),
             _image(),
-            _uploadImageButton(),
+            _uploadImageButton(productListViewModel),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: TextField(
@@ -93,6 +97,7 @@ class _UpdateProductState extends State<UpdateProduct> {
                       widget.product.name = nameText.text;
                       widget.product.description = descriptionText.text;
                       widget.product.price = double.parse(priceText.text);
+                      widget.product.image = productListViewModel.uploadfile;
 
                       bool isUpdated = await productListViewModel.updateProduct(widget.product.id!, widget.product);
                       if (isUpdated) {
@@ -117,20 +122,20 @@ class _UpdateProductState extends State<UpdateProduct> {
     return SizedBox(
       width: 100,
       height: 100,
-      child: Image.asset(
-        "assets/images/GLASS-2.png",
+      child: CachedNetworkImage(
+        imageUrl: widget.product.image!.path,
         fit: BoxFit.cover,
       ),
     );
   }
 
-  Padding _uploadImageButton() {
+  Padding _uploadImageButton(ProductListViewModel model) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
           onPressed: () {
-            //TODO:File işlemleri
+            model.selectFile();
           },
           child: const Text("Yükle")),
     );

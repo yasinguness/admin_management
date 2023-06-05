@@ -2,8 +2,10 @@ import 'package:admin_management/ui/settings/view/change_email.dart';
 import 'package:admin_management/ui/settings/view/change_password.dart';
 import 'package:admin_management/ui/settings/view/help_and_support.dart';
 import 'package:admin_management/ui/settings/view/personal_info.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -119,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             showDialog(
               context: context,
               builder: (context) {
-                return PersonalInfo();
+                return const PersonalInfo();
               },
             );
           },

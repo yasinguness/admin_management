@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:admin_management/network/model/customer/customer.dart';
 import 'package:admin_management/network/model/order_product/order_product.dart';
 import 'package:equatable/equatable.dart';

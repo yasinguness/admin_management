@@ -5,6 +5,8 @@ import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/base/base_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_for_web/image_picker_for_web.dart';
 
 class ProductListViewModel extends BaseModel {
   ProductService productService;
@@ -14,6 +16,7 @@ class ProductListViewModel extends BaseModel {
   List<ProductModel>? searchProducts;
   List<ProductModel>? sweetList;
   List<ProductModel>? coffeeList;
+  XFile? uploadfile;
 
   final TextEditingController searchQueryController = TextEditingController();
   bool? isUpdated;
@@ -66,5 +69,11 @@ class ProductListViewModel extends BaseModel {
   Future searchProduct(String query) async {
     searchProducts = await productService.searchProduct(query);
     setBusy(false);
+  }
+
+  void selectFile() async {
+    var result = await ImagePickerPlugin().getImage(source: ImageSource.gallery);
+
+    uploadfile = result;
   }
 }

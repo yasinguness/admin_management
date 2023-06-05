@@ -5,6 +5,7 @@ import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/base_service.dart';
 import 'package:admin_management/network/services/shared_pref.dart';
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 class ProductService extends BaseService {
   Future<List<ProductModel>?> fetchProducts() async {
@@ -39,13 +40,25 @@ class ProductService extends BaseService {
     SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
     var token = shared.getString("token");
     try {
-      var updateData = {
-        "name": model?.name,
-        "description": model?.description,
-        "price": model?.price,
-      };
-      final response = await dio.put("$BASE_URL/product/update-product/$id",
-          data: updateData, options: Options(headers: {"Authorization": "Bearer $token"}));
+      var request = http.MultipartRequest(
+        'PUT',
+        Uri.parse("$BASE_URL/product/update-product/$id"), // Ürün güncelleme API URL'sini buraya yazın
+      );
+
+      Map<String, String> headers = {"Authorization": "Bearer $token"};
+      request.headers.addAll(headers);
+      request.fields.addAll({"name": model!.name!, "price": model.price.toString(), "description": model.description!});
+
+      var img = await model.image!.readAsBytes();
+      // Resim dosyasını ekleyin
+
+      request.files.add(http.MultipartFile.fromBytes('image', img, filename: "newImage.jpeg"));
+
+      // Bearer token'ı ekleyin
+      // Kendi Bearer token'ınızı buraya yazın
+
+      var response = await request.send();
+
       if (response.statusCode == HttpStatus.ok) {
         print("Ürün Güncellendi");
         return true;

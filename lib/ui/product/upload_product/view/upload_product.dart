@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/product/upload_product/view_model/upload_product_view_model.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class UploadProductScreen extends StatefulWidget {
   const UploadProductScreen({super.key});
 
@@ -16,20 +15,9 @@ class UploadProductScreen extends StatefulWidget {
 }
 
 class _UploadProductScreenState extends State<UploadProductScreen> {
-  File? selectedFile;
-  void selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      setState(() {
-        selectedFile = File(result.files.single.path!);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    //var size = MediaQuery.of(context).size;
     return BaseView<UploadProductViewModel>(
       model: UploadProductViewModel(
         productService: locator<ProductService>(),
@@ -53,7 +41,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _fileUpload(),
+              _fileUpload(model),
               const SizedBox(
                 height: 20,
               ),
@@ -181,10 +169,10 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     );
   }
 
-  InkWell _fileUpload() {
+  InkWell _fileUpload(UploadProductViewModel model) {
     return InkWell(
       onTap: () {
-        selectFile();
+        //model.selectFile();
       },
       child: const TextField(
         enabled: false,

@@ -7,9 +7,11 @@ import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/dashboard/view_model/dashboard_view_model.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+@RoutePage()
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 

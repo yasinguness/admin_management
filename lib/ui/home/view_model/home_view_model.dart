@@ -5,7 +5,7 @@ import 'package:admin_management/ui/product/upload_product/view/upload_product.d
 import 'package:admin_management/ui/settings/view/settings.dart';
 
 class HomeViewModel extends BaseModel {
-  var currentIndex = 0;
+  var currentIndex = 1;
 
   var screens = [
     const DashboardScreen(),

@@ -5,7 +5,7 @@ import 'package:admin_management/network/services/shared_pref.dart';
 import 'package:dio/dio.dart';
 
 class UserService extends BaseService {
-  Future<bool?> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
 
     try {
@@ -25,7 +25,7 @@ class UserService extends BaseService {
       print(e);
       return false;
     }
-    return null;
+    return false;
   }
 
   Future<UserModel?> getUserProfile() async {

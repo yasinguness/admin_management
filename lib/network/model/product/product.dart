@@ -1,4 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'product.g.dart';
 
@@ -7,7 +10,8 @@ class ProductModel extends Equatable {
   String? id;
   String? name;
   String? description;
-  String? image;
+  @JsonKey(fromJson: _fileFromJson, toJson: _fileToJson)
+  XFile? image;
   String? size;
   double? price;
   DateTime? createdAt;
@@ -24,6 +28,9 @@ class ProductModel extends Equatable {
       this.createdAt,
       this.updatedAt,
       this.isSweet});
+
+  static XFile? _fileFromJson(String? filePath) => filePath != null ? XFile(filePath) : null;
+  static String? _fileToJson(XFile? file) => file?.path;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
   Map<dynamic, dynamic> toJson() => _$ProductModelToJson(this);

@@ -1,4 +1,5 @@
 import 'package:admin_management/network/model/order_product/order_product.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ItemRow extends StatelessWidget {
@@ -33,7 +34,9 @@ class ItemRow extends StatelessWidget {
                           BoxDecoration(color: Colors.grey.withOpacity(0.4), borderRadius: BorderRadius.circular(12)),
                       width: size.width * 0.06,
                       height: size.height * 0.08,
-                      child: Image.asset(product.product!.image ?? "assets/images/GLASS-2.png", fit: BoxFit.contain),
+                      child: CachedNetworkImage(
+                          imageUrl: product.product!.image!.path /* ?? "assets/images/GLASS-2.png" */,
+                          fit: BoxFit.contain),
                     ),
                   ),
                   const Spacer(
@@ -43,12 +46,12 @@ class ItemRow extends StatelessWidget {
                       flex: 3,
                       child: Text(
                         product.product!.name!,
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.displaySmall,
                       )),
                   const Spacer(
                     flex: 3,
                   ),
-                  Expanded(child: Text(product.amount.toString(), style: Theme.of(context).textTheme.headline4)),
+                  Expanded(child: Text(product.amount.toString(), style: Theme.of(context).textTheme.headlineMedium)),
                   const Spacer(
                     flex: 2,
                   ),
@@ -63,14 +66,16 @@ class ItemRow extends StatelessWidget {
                     const Spacer(
                       flex: 1,
                     ),
-                    Expanded(child: Text(product.currentPrice.toString(), style: Theme.of(context).textTheme.headline4))
+                    Expanded(
+                        child: Text(product.currentPrice.toString(), style: Theme.of(context).textTheme.headlineMedium))
                   ] else ...[
-                    Expanded(child: Text(product.selectedSize!, style: Theme.of(context).textTheme.headline4)),
+                    Expanded(child: Text(product.selectedSize!, style: Theme.of(context).textTheme.headlineMedium)),
                     const Spacer(
                       flex: 2,
                     ),
                     Expanded(
-                        child: Text(product.currentPrice.toString(), style: Theme.of(context).textTheme.headline4)),
+                        child:
+                            Text(product.currentPrice.toString(), style: Theme.of(context).textTheme.headlineMedium)),
                     const Spacer(
                       flex: 2,
                     ),

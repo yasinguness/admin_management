@@ -1,20 +1,22 @@
 import 'package:admin_management/common/constants/colors.dart';
-import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/common/regex/form_regex.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/user/user_service.dart';
+import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/auth/sign_in/view_model/login_view_model.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+@RoutePage()
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final LoginViewModel model = LoginViewModel(userService: locator<UserService>());
   LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    LoginViewModel model = LoginViewModel(userService: locator<UserService>());
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +112,7 @@ Positioned _loginButton(Size size, BuildContext context, LoginViewModel model, T
               var isLogged = await model.login(emailController.text, passwordController.text);
 
               if (isLogged) {
-                Navigator.pushNamed(context, RouteConst.homeScreen);
+                context.router.push(const HomeRoute());
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Giriş hatalı ")));
               }

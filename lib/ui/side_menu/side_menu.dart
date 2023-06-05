@@ -1,19 +1,20 @@
-import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/common/widgets/drawer_list_tile.dart';
+import 'package:admin_management/router/app_router.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class SideMenu extends StatefulWidget {
-  final void Function(int index) press;
-  const SideMenu({super.key, required this.press});
+@RoutePage()
+class SideMenuScreen extends StatefulWidget {
+  //final void Function(int index) press;
+  const SideMenuScreen({super.key});
 
   @override
-  State<SideMenu> createState() => _SideMenuState();
+  State<SideMenuScreen> createState() => _SideMenuScreenState();
 }
 
-class _SideMenuState extends State<SideMenu> {
+class _SideMenuScreenState extends State<SideMenuScreen> {
   @override
   Widget build(BuildContext context) {
-    int index = 0;
     return Drawer(
       backgroundColor: Colors.black,
       child: ListView(
@@ -32,27 +33,21 @@ class _SideMenuState extends State<SideMenu> {
             title: "Siparişler",
             svgSrc: "assets/icons/menu_dashbord.svg",
             press: () {
-              index = 0;
-              widget.press(index);
+              context.router.push(const DashboardRoute());
             },
           ),
           DrawerListTile(
             title: "Ürün Listesi",
             svgSrc: "assets/icons/menu_store.svg",
             press: () {
-              index = 1;
-              widget.press(index);
+              context.router.push(const ProductsRoute());
             },
           ),
           DrawerListTile(
             title: "Ürün Ekle",
             svgSrc: "assets/icons/product.svg",
             press: () {
-              index = 2;
-              widget.press(index);
-              /*  if (mounted) {
-                Navigator.pushNamed(context, RouteConst.productLists);
-              } */ // Ürün ekleme işlemi tamamlandıktan sonra "Ürün Listesi" sayfasına yönlendirmek için await kullanın.
+              context.router.push(const UploadProductRoute());
             },
           ),
           /*  DrawerListTile(
@@ -66,15 +61,15 @@ class _SideMenuState extends State<SideMenu> {
             title: "Ayarlar",
             svgSrc: "assets/icons/menu_setting.svg",
             press: () {
-              index = 3;
-              widget.press(index);
+              context.router.push(const SettingsRoute());
             },
           ),
           DrawerListTile(
             title: "Çıkış Yap",
             svgSrc: "assets/icons/logout.svg",
             press: () {
-              Navigator.pushNamedAndRemoveUntil(context, RouteConst.loginView, (route) => false);
+              context.router.push(LoginRoute());
+              context.router.removeUntil((route) => false);
             },
           )
         ],

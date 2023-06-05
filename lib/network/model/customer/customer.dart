@@ -5,12 +5,12 @@ part 'customer.g.dart';
 
 @JsonSerializable()
 class CustomerModel extends Equatable {
-  String? id;
-  String? name;
-  String? qrNo;
-  List<String>? orders;
+  final String? id;
+  final String? name;
+  final String? qrNo;
+  final List<String>? orders;
 
-  CustomerModel({this.id, this.name, this.qrNo, this.orders});
+  const CustomerModel({this.id, this.name, this.qrNo, this.orders});
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) => _$CustomerModelFromJson(json);
   Map<dynamic, dynamic> toJson() => _$CustomerModelToJson(this);
