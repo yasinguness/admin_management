@@ -28,15 +28,9 @@ class AppRouter extends _$AppRouter {
           AuthGuard()
         ], */
             children: [
+          AutoRoute(page: DashboardRoute.page, path: "dashboard", initial: true),
           AutoRoute(
-            page: DashboardRoute.page,
-            path: "dashboard",
-          ),
-          AutoRoute(
-              page: ProductsRoute.page,
-              path: "productList",
-              initial: true,
-              children: [AutoRoute(page: UpdateProductRoute.page)]),
+              page: ProductsRoute.page, path: "productList", children: [AutoRoute(page: UpdateProductRoute.page)]),
           AutoRoute(page: UploadProductRoute.page, path: "uploadProduct"),
           AutoRoute(page: SettingsRoute.page, path: "settings"),
         ]),

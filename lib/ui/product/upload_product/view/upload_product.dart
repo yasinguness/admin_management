@@ -1,9 +1,10 @@
-import 'package:admin_management/common/constants/route_const.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
+import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/product/upload_product/view_model/upload_product_view_model.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -41,6 +42,16 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade300),
+                  child: model.selectedFile != null
+                      ? CachedNetworkImage(fit: BoxFit.contain, imageUrl: model.selectedFile!.path)
+                      : const Center(child: Text("Bir resim seçiniz"))),
+              const SizedBox(
+                height: 20,
+              ),
               _fileUpload(model),
               const SizedBox(
                 height: 20,
@@ -123,7 +134,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             bool isAdd = await model.addProduct();
             if (isAdd) {
               if (mounted) {
-                await Navigator.pushNamed(context, RouteConst.productLists);
+                context.router.push(const ProductsRoute());
+
+//                await Navigator.pushNamed(context, RouteConst.productLists);
               } else {
                 const AlertDialog(
                   content: Text("İşlem Başarısız"),
@@ -172,7 +185,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   InkWell _fileUpload(UploadProductViewModel model) {
     return InkWell(
       onTap: () {
-        //model.selectFile();
+        model.selectFile();
       },
       child: const TextField(
         enabled: false,

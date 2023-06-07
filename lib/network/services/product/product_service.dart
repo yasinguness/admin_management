@@ -73,7 +73,7 @@ class ProductService extends BaseService {
   Future<bool?> createProduct(ProductModel model) async {
     SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
     var token = shared.getString("token");
-    try {
+    /*   try {
       final createModel = {
         "name": model.name,
         "description": model.description,
@@ -89,6 +89,41 @@ class ProductService extends BaseService {
       }
     } catch (e) {
       print("Hata! ${e.toString()}");
+      return false;
+    }
+    return null; */
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse("$BASE_URL/product/create"), // Ürün güncelleme API URL'sini buraya yazın
+      );
+
+      Map<String, String> headers = {"Authorization": "Bearer $token"};
+      request.headers.addAll(headers);
+      request.fields.addAll({
+        "name": model.name!,
+        "price": model.price.toString(),
+        "description": model.description!,
+        "size": model.size!,
+        "isSweet": model.isSweet!
+      });
+
+      var img = await model.image!.readAsBytes();
+      // Resim dosyasını ekleyin
+
+      request.files.add(http.MultipartFile.fromBytes('image', img, filename: "PostImage.jpeg"));
+
+      // Bearer token'ı ekleyin
+      // Kendi Bearer token'ınızı buraya yazın
+
+      var response = await request.send();
+
+      if (response.statusCode == HttpStatus.ok) {
+        print("Ürün Eklendi");
+        return true;
+      }
+    } catch (e) {
+      print("Hata! $e");
       return false;
     }
     return null;

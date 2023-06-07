@@ -1,13 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:admin_management/locator.dart';
 import 'package:flutter/material.dart';
 
 import 'package:admin_management/network/services/user/user_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  UserService userService = locator<UserService>();
+  UserService? userService;
 
   bool? _authenticated = false;
+
+  AuthProvider({
+    this.userService,
+  });
 
   bool get authenticated => _authenticated!;
 
@@ -17,6 +20,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future login(String email, String password) async {
-    authenticated = await userService.login(email, password);
+    authenticated = await userService!.login(email, password);
   }
 }

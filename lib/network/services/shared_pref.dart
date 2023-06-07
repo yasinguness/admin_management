@@ -27,6 +27,9 @@ class SharedPreferencesManager {
     return (_prefs!.getString(key)!);
   }
 
-  // Add more methods as needed...
+  Future clear() async {
+    await _prefs!.clear();
+  }
 
+  // Add more methods as needed...
 }

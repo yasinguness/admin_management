@@ -5,7 +5,6 @@ import 'package:admin_management/ui/base/base_model.dart';
 
 class DashboardViewModel extends BaseModel {
   OrderService? orderService;
-
   DashboardViewModel({this.orderService, this.orderProvider});
 
   OrderProvider? orderProvider;
@@ -49,15 +48,15 @@ class DashboardViewModel extends BaseModel {
     setBusy(false);
   }
 
-  Future addOrderToInProgressList(OrderModel model) async {
+  addOrderToInProgressList(OrderModel model) {
     orderProvider!.addOrderToInProgressList(model);
   }
 
-  Future addOrderToCompletedList(OrderModel model) async {
+  addOrderToCompletedList(OrderModel model) {
     orderProvider!.addOrderToCompletedList(model);
   }
 
-  Future deleteCompletedOrder(OrderModel model) async {
+  deleteCompletedOrder(OrderModel model) {
     orderProvider!.removeOrder(model);
     deleteOrder(model.id!);
   }

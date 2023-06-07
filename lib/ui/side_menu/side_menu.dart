@@ -1,5 +1,8 @@
 import 'package:admin_management/common/widgets/drawer_list_tile.dart';
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/services/user/user_service.dart';
 import 'package:admin_management/router/app_router.dart';
+import 'package:admin_management/ui/side_menu/view_model/side_menu_view_model.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +16,7 @@ class SideMenuScreen extends StatefulWidget {
 }
 
 class _SideMenuScreenState extends State<SideMenuScreen> {
+  var model = SideMenuViewModel(userService: locator<UserService>());
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -68,8 +72,7 @@ class _SideMenuScreenState extends State<SideMenuScreen> {
             title: "Çıkış Yap",
             svgSrc: "assets/icons/logout.svg",
             press: () {
-              context.router.push(LoginRoute());
-              context.router.removeUntil((route) => false);
+              model.logout(context);
             },
           )
         ],

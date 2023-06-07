@@ -3,6 +3,7 @@ import 'package:admin_management/network/model/user/user.dart';
 import 'package:admin_management/network/services/base_service.dart';
 import 'package:admin_management/network/services/shared_pref.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class UserService extends BaseService {
   Future<bool> login(String email, String password) async {
@@ -26,6 +27,16 @@ class UserService extends BaseService {
       return false;
     }
     return false;
+  }
+
+  Future<bool> logout(BuildContext context) async {
+    SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+    try {
+      await shared.clear();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<UserModel?> getUserProfile() async {

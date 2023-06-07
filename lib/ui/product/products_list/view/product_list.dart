@@ -326,7 +326,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
               TextButton(
                   onPressed: () {
                     model.deleteProduct(model.productList![index].id!);
-                    Navigator.pop(context);
+                    context.router.pop(context);
                     model.productList!.removeAt(index);
                   },
                   child: const Text("Evet")),

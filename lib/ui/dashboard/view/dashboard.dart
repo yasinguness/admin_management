@@ -264,53 +264,6 @@ Expanded _orderDetail(DashboardViewModel value, Size size, TabController control
 Column _pending(DashboardViewModel value) {
   return Column(
     children: [
-      /*  Row(
-        children: [
-          Expanded(
-              flex: 4,
-              child: Row(
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Expanded(child: Text('Resim')),
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                      child: Text(
-                    "Ürün Adı",
-                    maxLines: 2,
-                  )),
-                  Spacer(
-                    flex: 3,
-                  ),
-                  Expanded(
-                      child: Text(
-                    "Ürün Miktarı",
-                    maxLines: 2,
-                  )),
-                  Spacer(
-                    flex: 2,
-                  )
-                ],
-              )),
-          Expanded(
-              flex: 2,
-              child: Row(
-                children: const [
-                  Expanded(child: Text("Ürün Boyutu")),
-                  Spacer(
-                    flex: 2,
-                  ),
-                  Expanded(child: Text("Ürün Fiyatı")),
-                  Spacer(
-                    flex: 2,
-                  )
-                ],
-              ))
-        ], */
-
       OrderDetail(
         order: value.order,
       ),
@@ -404,6 +357,54 @@ class OrderInfoRow extends StatelessWidget {
     );
   }
 }
+ /*  Row(
+        children: [
+          Expanded(
+              flex: 4,
+              child: Row(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Expanded(child: Text('Resim')),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                      child: Text(
+                    "Ürün Adı",
+                    maxLines: 2,
+                  )),
+                  Spacer(
+                    flex: 3,
+                  ),
+                  Expanded(
+                      child: Text(
+                    "Ürün Miktarı",
+                    maxLines: 2,
+                  )),
+                  Spacer(
+                    flex: 2,
+                  )
+                ],
+              )),
+          Expanded(
+              flex: 2,
+              child: Row(
+                children: const [
+                  Expanded(child: Text("Ürün Boyutu")),
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Expanded(child: Text("Ürün Fiyatı")),
+                  Spacer(
+                    flex: 2,
+                  )
+                ],
+              ))
+        ], */
+
+
  /* Header(),
             SizedBox(
               height: 16,

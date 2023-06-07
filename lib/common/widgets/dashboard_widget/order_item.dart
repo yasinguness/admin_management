@@ -85,7 +85,7 @@ class _OrderItemState extends State<OrderItem> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        "${widget.item.customer!.id}",
+        "${widget.item.id}",
         style: const TextStyle(fontSize: 22),
       ),
     );
@@ -116,7 +116,7 @@ class _OrderItemState extends State<OrderItem> {
         child: Text(widget.item.totalPrice.toString(),
             overflow: TextOverflow.clip,
             maxLines: 2,
-            style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold)),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
       ),
     );
   }
