@@ -20,7 +20,6 @@ class OrderStatisticViewModel extends BaseModel {
 
   Future getStatistics() async {
     setBusy(true);
-
     model = await orderService!.getStatistics();
     await getCoffee();
     await getSweet();

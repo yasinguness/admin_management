@@ -4,6 +4,7 @@ import 'package:admin_management/common/widgets/dashboard_widget/order_detail.da
 import 'package:admin_management/common/widgets/dashboard_widget/order_item.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/tab_view_button.dart';
 import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/model/order/order.dart';
 import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/dashboard/view_model/dashboard_view_model.dart';
@@ -144,186 +145,222 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
     );
   }
 
-  ListView _totalOrderTab(DashboardViewModel value) {
-    return ListView.builder(
-      itemCount: value.orderProvider!.ordersList.length,
-      itemBuilder: (context, index) {
-        value.indexx = index;
-        return GestureDetector(
-            onTap: () {
-              value.getOrder(value.orderProvider!.ordersList[index].id!);
+  StreamBuilder<List<OrderModel>> _totalOrderTab(DashboardViewModel value) {
+    return StreamBuilder<List<OrderModel>>(
+      stream: value.orderProvider!.ordersListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final orders = snapshot.data!;
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              value.indexx = index;
+              return GestureDetector(
+                  onTap: () {
+                    value.getOrder(orders[index].id!);
+                  },
+                  child: OrderItem(item: orders[index]));
             },
-            child: OrderItem(item: value.orderProvider!.ordersList[index]));
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        } else {
+          return const CircularProgressIndicator();
+        }
       },
     );
   }
 
-  ListView _inProgressOrderTab(DashboardViewModel value) {
-    return ListView.builder(
-      itemCount: value.orderProvider!.inProgressList.length,
-      itemBuilder: (context, index) {
-        value.indexx = index;
-        return GestureDetector(
-            onTap: () {
-              value.getInProgress(value.orderProvider!.inProgressList[index].id!);
+  StreamBuilder<List<OrderModel>> _inProgressOrderTab(DashboardViewModel value) {
+    return StreamBuilder<List<OrderModel>>(
+      stream: value.orderProvider!.inProgressListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final orders = snapshot.data!;
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              value.indexx = index;
+              return GestureDetector(
+                  onTap: () {
+                    value.getOrder(orders[index].id!);
+                  },
+                  child: OrderItem(item: orders[index]));
             },
-            child: OrderItem(item: value.orderProvider!.inProgressList[index]));
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        } else {
+          return const CircularProgressIndicator();
+        }
       },
     );
   }
 
-  ListView _completedOrderTab(DashboardViewModel value) {
-    return ListView.builder(
-      itemCount: value.orderProvider!.completedList.length,
-      itemBuilder: (context, index) {
-        value.indexx = index;
-        return GestureDetector(
-            onTap: () {
-              value.getCompleted(value.orderProvider!.completedList[index].id!);
+  StreamBuilder<List<OrderModel>> _completedOrderTab(DashboardViewModel value) {
+    return StreamBuilder<List<OrderModel>>(
+      stream: value.orderProvider!.completedListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final orders = snapshot.data!;
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              value.indexx = index;
+              return GestureDetector(
+                  onTap: () {
+                    value.getOrder(orders[index].id!);
+                  },
+                  child: OrderItem(item: orders[index]));
             },
-            child: OrderItem(item: value.orderProvider!.completedList[index]));
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        } else {
+          return const CircularProgressIndicator();
+        }
       },
     );
   }
-}
 
-Padding _detail(BuildContext context, DashboardViewModel value, Size size, TabController controller) {
-  return Padding(
-    padding: const EdgeInsets.all(24.0),
-    child: Container(
-      color: Colors.white,
-      child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _titleAndHeader(context, value),
-            _orderDetail(value, size, controller), /* _button(value) */
-          ]),
-    ),
-  );
-}
-
-Expanded _titleAndHeader(BuildContext context, DashboardViewModel value) {
-  return Expanded(
-    flex: 1,
-    child: Column(
-      children: [
-        _title(context),
-        _headerInfoRow(value),
-      ],
-    ),
-  );
-}
-
-Text _title(BuildContext context) {
-  return Text(
-    "Sipariş Detay",
-    style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
-  );
-}
-
-IntrinsicHeight _headerInfoRow(DashboardViewModel value) {
-  return IntrinsicHeight(
-    child: Row(
-      children: [
-        const VerticalDivider(
-          thickness: 1,
-          color: Colors.grey,
-        ),
-        Expanded(
-          child: OrderInfoRow(text1: "İsim", text2: value.order!.customer!.name!),
-        ),
-        const VerticalDivider(
-          thickness: 1,
-          color: Colors.grey,
-        ),
-        Expanded(
-          child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.customer!.qrNo.toString()),
-        ),
-        const VerticalDivider(
-          thickness: 1,
-          color: Colors.grey,
-        ),
-      ],
-    ),
-  );
-}
-
-Expanded _orderDetail(DashboardViewModel value, Size size, TabController controller) {
-  return Expanded(
-    flex: 8,
-    child: value.busy
-        ? const Center(child: CircularProgressIndicator())
-        : TabBarView(controller: controller, children: [
-            _pending(value),
-            _inProgress(value),
-            _completed(value),
-          ]),
-  );
-}
-
-Column _pending(DashboardViewModel value) {
-  return Column(
-    children: [
-      OrderDetail(
-        order: value.order,
+  Padding _detail(BuildContext context, DashboardViewModel value, Size size, TabController controller) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _titleAndHeader(context, value),
+              _orderDetail(value, size, controller), /* _button(value) */
+            ]),
       ),
-      TabViewButton(
-          text: "Sipariş Hazırla",
-          onPressed: () {
-            value.addOrderToInProgressList(value.order!);
-          })
-    ],
-  );
-}
+    );
+  }
 
-Column _completed(DashboardViewModel value) {
-  return Column(children: [
-    Expanded(
-        child: value.completedOrder == null
-            ? const SizedBox.shrink()
-            : SingleChildScrollView(
-                child: ListView.separated(
+  Expanded _titleAndHeader(BuildContext context, DashboardViewModel value) {
+    return Expanded(
+      flex: 1,
+      child: Column(
+        children: [
+          _title(context),
+          _headerInfoRow(value),
+        ],
+      ),
+    );
+  }
+
+  Text _title(BuildContext context) {
+    return Text(
+      "Sipariş Detay",
+      style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
+
+  IntrinsicHeight _headerInfoRow(DashboardViewModel value) {
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          const VerticalDivider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+          Expanded(
+            child: OrderInfoRow(text1: "İsim", text2: value.order!.customer!.name!),
+          ),
+          const VerticalDivider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+          Expanded(
+            child: OrderInfoRow(text1: "Masa Numarası", text2: value.order!.customer!.qrNo.toString()),
+          ),
+          const VerticalDivider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Expanded _orderDetail(DashboardViewModel value, Size size, TabController controller) {
+    return Expanded(
+      flex: 8,
+      child: value.busy
+          ? const Center(child: CircularProgressIndicator())
+          : TabBarView(controller: controller, children: [
+              _pending(value),
+              _inProgress(value),
+              _completed(value),
+            ]),
+    );
+  }
+
+  Column _pending(DashboardViewModel value) {
+    return Column(
+      children: [
+        OrderDetail(
+          order: value.order,
+        ),
+        TabViewButton(
+            text: "Sipariş Hazırla",
+            onPressed: () {
+              value.addOrderToInProgressList(value.order!);
+            })
+      ],
+    );
+  }
+
+  Column _completed(DashboardViewModel value) {
+    return Column(children: [
+      Expanded(
+          child: value.completedOrder == null
+              ? const SizedBox.shrink()
+              : SingleChildScrollView(
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 8,
+                          ),
+                      itemBuilder: (context, index) => ItemRow(product: value.completedOrder!.products![index]),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: value.order!.products!.length),
+                )),
+      TabViewButton(
+        text: "Sipariş Sil",
+        onPressed: () {
+          value.completed(value.order!);
+        },
+      )
+    ]);
+  }
+
+  Column _inProgress(DashboardViewModel value) {
+    return Column(children: [
+      Expanded(
+          child: value.iProgressOrder == null
+              ? const SizedBox.shrink()
+              : SingleChildScrollView(
+                  child: ListView.separated(
                     separatorBuilder: (context, index) => const SizedBox(
-                          height: 8,
-                        ),
-                    itemBuilder: (context, index) => ItemRow(product: value.completedOrder!.products![index]),
+                      height: 8,
+                    ),
+                    itemCount: value.iProgressOrder!.products!.length,
+                    itemBuilder: (context, index) => ItemRow(product: value.iProgressOrder!.products![index]),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: value.order!.products!.length),
-              )),
-    TabViewButton(
-      text: "Sipariş Sil",
-      onPressed: () {
-        value.completed(value.order!);
-      },
-    )
-  ]);
-}
-
-Column _inProgress(DashboardViewModel value) {
-  return Column(children: [
-    Expanded(
-        child: value.iProgressOrder == null
-            ? const SizedBox.shrink()
-            : SingleChildScrollView(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 8,
                   ),
-                  itemCount: value.iProgressOrder!.products!.length,
-                  itemBuilder: (context, index) => ItemRow(product: value.iProgressOrder!.products![index]),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                ),
-              )),
-    TabViewButton(
-      text: "Sipariş Tamamlandı",
-      onPressed: () {
-        value.addOrderToCompletedList(value.order!);
-        //value.orderProvider!.removeOrder(value.order!);
-      },
-    )
-  ]);
+                )),
+      TabViewButton(
+        text: "Sipariş Tamamlandı",
+        onPressed: () {
+          value.addOrderToCompletedList(value.order!);
+          //value.orderProvider!.removeOrder(value.order!);
+        },
+      )
+    ]);
+  }
 }
 
 class OrderInfoRow extends StatelessWidget {

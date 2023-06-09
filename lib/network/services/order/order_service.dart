@@ -23,7 +23,7 @@ class OrderService extends BaseService {
     return [];
   }
 
-  Future<List<OrderModel>> getPendingList() async {
+/*     Future<List<OrderModel>> getPendingList() async {
     SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
     var token = shared.getString("token");
     final response =
@@ -36,6 +36,22 @@ class OrderService extends BaseService {
       }
     }
     return [];
+  } */
+
+  Stream<List<OrderModel>> getPendingList() async* {
+    SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+    var token = shared.getString("token");
+    final response =
+        await dio.get('$BASE_URL/order/pending', options: Options(headers: {'Authorization': "Bearer $token"}));
+
+    if (response.statusCode == HttpStatus.ok) {
+      final datas = response.data['data'];
+      if (datas is List) {
+        yield datas.map((e) => OrderModel.fromJson(e)).toList();
+      }
+    } else {
+      yield []; // Hata durumunda boş liste döndürülür
+    }
   }
 
   //List<OrderModel> postFromJson(data) => List<OrderModel>.from(data.map((x) => OrderModel.fromJson(x)));

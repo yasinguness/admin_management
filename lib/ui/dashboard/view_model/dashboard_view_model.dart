@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:admin_management/common/provider/order_provider.dart';
 import 'package:admin_management/network/model/order/order.dart';
 import 'package:admin_management/network/services/order/order_service.dart';
@@ -9,7 +11,9 @@ class DashboardViewModel extends BaseModel {
 
   OrderProvider? orderProvider;
 
-  List<OrderModel>? orders;
+  //List<OrderModel>? orders;
+
+  StreamSubscription<List<OrderModel>>? ordersStreamSubscription;
 
   OrderModel? order;
   OrderModel? iProgressOrder;
@@ -40,12 +44,29 @@ class DashboardViewModel extends BaseModel {
     await orderService!.deleteOrder(id);
   }
 
-  Future fetchOrders() async {
+/*   Future fetchOrders() async {
     setBusy(true);
     orders = await orderService!.getPendingList();
     orderProvider!.ordersList.addAll(orders!);
     await getOrder(orderProvider!.ordersList.first.id!);
     setBusy(false);
+  } */
+
+  void fetchOrders() {
+    setBusy(true);
+    ordersStreamSubscription = orderService!.getPendingList().listen((orders) {
+      orderProvider!.orderList(orders);
+      getOrder(orders.first.id!);
+      setBusy(false);
+    }, onError: (error) {
+      print(error);
+    });
+  }
+
+  @override
+  void dispose() {
+    ordersStreamSubscription?.cancel();
+    super.dispose();
   }
 
   addOrderToInProgressList(OrderModel model) {
