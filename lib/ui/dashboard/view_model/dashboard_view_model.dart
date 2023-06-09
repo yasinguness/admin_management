@@ -42,7 +42,7 @@ class DashboardViewModel extends BaseModel {
 
   Future fetchOrders() async {
     setBusy(true);
-    orders = await orderService!.fetchOrders();
+    orders = await orderService!.getPendingList();
     orderProvider!.ordersList.addAll(orders!);
     await getOrder(orderProvider!.ordersList.first.id!);
     setBusy(false);
@@ -56,8 +56,9 @@ class DashboardViewModel extends BaseModel {
     orderProvider!.addOrderToCompletedList(model);
   }
 
-  deleteCompletedOrder(OrderModel model) {
-    orderProvider!.removeOrder(model);
-    deleteOrder(model.id!);
+  completed(OrderModel model) {
+    model.status = "completed";
+    orderService!.updateOrder(model.id!, model.status!);
+    orderProvider!.completedOrder(model);
   }
 }

@@ -73,25 +73,7 @@ class ProductService extends BaseService {
   Future<bool?> createProduct(ProductModel model) async {
     SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
     var token = shared.getString("token");
-    /*   try {
-      final createModel = {
-        "name": model.name,
-        "description": model.description,
-        "price": model.price,
-        "size": model.size,
-        "isSweet": model.isSweet
-      };
-      final response = await dio.post("$BASE_URL/product/create",
-          data: createModel, options: Options(headers: {"Authorization": "Bearer $token"}));
-      if (response.statusCode == HttpStatus.created) {
-        print("Ürün Eklendi");
-        return true;
-      }
-    } catch (e) {
-      print("Hata! ${e.toString()}");
-      return false;
-    }
-    return null; */
+
     try {
       var request = http.MultipartRequest(
         'POST',
@@ -176,6 +158,20 @@ class ProductService extends BaseService {
       if (datas is List) {
         return datas.map((e) => ProductModel.fromJson(e)).toList();
       }
+    }
+    return null;
+  }
+
+  Future<ProductModel?> getProductById(String id) async {
+    SharedPreferencesManager shared = await SharedPreferencesManager.getInstance();
+    var token = shared.getString("token");
+    final response =
+        await dio.get('$BASE_URL/product/$id', options: Options(headers: {"Authorization": "Bearer $token"}));
+
+    if (response.statusCode == HttpStatus.ok) {
+      final datas = response.data['data'];
+
+      return ProductModel.fromJson(datas);
     }
     return null;
   }

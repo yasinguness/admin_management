@@ -107,19 +107,21 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
             children: [
               StatisticCard(
                 size: size,
-                totalProductTitle: "Toplam Ürün",
+                title: "Toplam Ürün",
                 counter: model.productList!.length.toString(),
+                widget: const Icon(Icons.coffee),
               ),
               StatisticCard(
                 size: size,
-                totalProductTitle: "Toplam Kahve",
+                title: "Toplam Kahve",
                 counter: model.coffeeList!.length.toString(),
+                widget: const Icon(Icons.coffee),
               ),
               StatisticCard(
-                size: size,
-                totalProductTitle: "Toplam Tatlı",
-                counter: model.sweetList!.length.toString(),
-              ),
+                  size: size,
+                  title: "Toplam Tatlı",
+                  counter: model.sweetList!.length.toString(),
+                  widget: const Icon(Icons.coffee)),
               const SizedBox(
                 height: 8,
               ),

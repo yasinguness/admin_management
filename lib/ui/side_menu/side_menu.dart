@@ -54,13 +54,13 @@ class _SideMenuScreenState extends State<SideMenuScreen> {
               context.router.push(const UploadProductRoute());
             },
           ),
-          /*  DrawerListTile(
-            title: "Yardım Ve Destek",
-            svgSrc: "assets/icons/support.svg",
+          DrawerListTile(
+            title: "İstatistikler",
+            svgSrc: "assets/icons/menu_tran.svg",
             press: () {
-              
+              context.router.push(const OrderStatisticRoute());
             },
-          ) */
+          ),
           DrawerListTile(
             title: "Ayarlar",
             svgSrc: "assets/icons/menu_setting.svg",

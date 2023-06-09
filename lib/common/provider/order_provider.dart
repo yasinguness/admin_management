@@ -26,7 +26,7 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeOrder(OrderModel model) {
+  void completedOrder(OrderModel model) {
     completedList.removeWhere((order) => order == model);
     notifyListeners();
   }

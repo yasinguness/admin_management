@@ -294,7 +294,7 @@ Column _completed(DashboardViewModel value) {
     TabViewButton(
       text: "Sipariş Sil",
       onPressed: () {
-        value.deleteCompletedOrder(value.order!);
+        value.completed(value.order!);
       },
     )
   ]);
