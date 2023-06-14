@@ -1,9 +1,13 @@
+import 'package:admin_management/common/constants/colors.dart';
+import 'package:admin_management/common/provider/theme_notifier.dart';
+import 'package:admin_management/common/themes/theme.dart';
 import 'package:admin_management/ui/settings/view/change_email.dart';
 import 'package:admin_management/ui/settings/view/change_password.dart';
 import 'package:admin_management/ui/settings/view/help_and_support.dart';
 import 'package:admin_management/ui/settings/view/personal_info.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class SettingsScreen extends StatefulWidget {
@@ -35,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         _title(context),
         _helpAndSupport(context),
-        _language(val),
+        _darkMode(val),
       ],
     );
   }
@@ -61,7 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
       iconData: Icons.support,
-      text: "Help And Support",
+      text: "Yardım Ve Destek",
       widget: const Icon(
         Icons.arrow_forward_ios,
         color: Colors.grey,
@@ -70,26 +74,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  CustomProfileItem _language(String val) {
+  CustomProfileItem _darkMode(String val) {
     return CustomProfileItem(
       iconData: Icons.language_outlined,
-      text: "Language",
+      text: "Dark Mode",
       widget: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          //TODO:Düzenlenecek kısımlar var
-          DropdownButton<String>(
-            value: val,
-            items: <String>['English', 'Türkçe', 'Deutsch', '"Holland"'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+          Switch(
+            activeColor: AppColors.brown,
+            value: context.read<ThemeNotifier>().currentThemeData == CustomTheme.darkThemeData,
             onChanged: (value) {
-              setState(() {
-                val = value!;
-              });
+              var notifier = Provider.of<ThemeNotifier>(context, listen: false);
+              notifier.toggleTheme();
             },
           ),
           const Padding(

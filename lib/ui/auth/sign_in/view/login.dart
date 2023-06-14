@@ -5,6 +5,7 @@ import 'package:admin_management/network/services/user/user_service.dart';
 import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/auth/sign_in/view_model/login_view_model.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
@@ -107,15 +108,67 @@ Positioned _loginButton(Size size, BuildContext context, LoginViewModel model, T
         width: size.width * 0.5,
         height: size.width * 0.03,
         child: ElevatedButton(
-          onPressed: () async {
+          onPressed: () {
             if (formKey.currentState!.validate()) {
-              var isLogged = await model.login(emailController.text, passwordController.text);
+              model
+                  .login(emailController.text, passwordController.text)
+                  .then((value) => {
+                        if (value)
+                          {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                elevation: 0,
+                                duration: const Duration(milliseconds: 2000),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Giriş Başarılı!',
+                                  message: 'Sipariş paneline yönlendiriliyorsunuz.',
 
-              if (isLogged) {
-                context.router.push(const HomeRoute());
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Giriş hatalı ")));
-              }
+                                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                  contentType: ContentType.success,
+                                ),
+                              )),
+                            Future.delayed(const Duration(milliseconds: 2500), () {
+                              context.router.push(const HomeRoute());
+                            })
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Hatalı Giriş!',
+                                  message: 'Giriş yapılamadı, kontrol edin !',
+
+                                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                  contentType: ContentType.failure,
+                                ),
+                              ))
+                          }
+                      })
+                  .catchError((error) {
+                return error;
+              });
+            } else {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    inMaterialBanner: true,
+                    title: 'Hatalı Giriş!',
+                    message: 'Lütfen email ve şifrenizi eksik veya yanlış girmediğinizden emin olun!',
+                    contentType: ContentType.failure,
+                  ),
+                ));
             }
           },
           style: ElevatedButton.styleFrom(

@@ -13,7 +13,7 @@ class OrderStatisticsModel {
   int? dailyTotalOrderAmount;
   int? totalCoffeeOrders;
   int? totalDessertOrders;
-  int? totalOrderCount;
+  int? totalOrderAmount;
 
   OrderStatisticsModel({
     this.mostOrderedCoffee,
@@ -23,7 +23,7 @@ class OrderStatisticsModel {
     this.dailyTotalOrderAmount,
     this.totalCoffeeOrders,
     this.totalDessertOrders,
-    this.totalOrderCount,
+    this.totalOrderAmount,
   });
 
   factory OrderStatisticsModel.fromJson(Map<String, dynamic> json) => _$OrderStatisticsModelFromJson(json);

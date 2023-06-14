@@ -1,15 +1,15 @@
 import 'package:admin_management/common/constants/colors.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/category_bar_widget.dart';
-import 'package:admin_management/common/widgets/statistic_card_widget.dart';
+import 'package:admin_management/common/widgets/dashboard_widget/product_card_widget.dart';
+import 'package:admin_management/common/widgets/dashboard_widget/statistic_card_widget.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/base/base_view.dart';
-import 'package:admin_management/ui/product/products_list/view/update_product.dart';
 import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 @RoutePage()
 class ProductsScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
       onModelReady: (p0) => p0.init(),
       model: ProductListViewModel(productService: locator<ProductService>()),
       builder: (context, value, widget) => value.busy
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingAnimationWidget.threeRotatingDots(color: AppColors.brown, size: 48))
           : Scaffold(
               body: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,19 +109,28 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 size: size,
                 title: "Toplam Ürün",
                 counter: model.productList!.length.toString(),
-                widget: const Icon(Icons.coffee),
+                widget: const Icon(
+                  Icons.production_quantity_limits,
+                  size: 30,
+                ),
               ),
               StatisticCard(
                 size: size,
                 title: "Toplam Kahve",
                 counter: model.coffeeList!.length.toString(),
-                widget: const Icon(Icons.coffee),
+                widget: const Icon(
+                  Icons.coffee,
+                  size: 30,
+                ),
               ),
               StatisticCard(
                   size: size,
                   title: "Toplam Tatlı",
                   counter: model.sweetList!.length.toString(),
-                  widget: const Icon(Icons.coffee)),
+                  widget: const Icon(
+                    Icons.cake,
+                    size: 30,
+                  )),
               const SizedBox(
                 height: 8,
               ),
@@ -138,10 +147,9 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
       width: size.width,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+              backgroundColor: AppColors.brown, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
           onPressed: () {
             context.router.push(const UploadProductRoute());
-            //Navigator.pushNamed(context, RouteConst.uploadProduct);
           },
           child: Text(
             "Yeni Ürün Ekle",
@@ -176,10 +184,6 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _productList(Size size, BuildContext context, ProductListViewModel value) {
-/*     if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
-      value.productList = value.searchProducts!;
-    } */
-
     if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
       value.productList = value.searchProducts;
 
@@ -197,7 +201,15 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
               shrinkWrap: true,
               crossAxisCount: 4,
               children: List.generate(value.productList!.length, (index) {
-                return _productCart(context, value, index);
+                return ProductCardWidget(
+                  value: value,
+                  imageUrl: value.productList![index].image!.path,
+                  productName: value.productList![index].name.toString(),
+                  productDescription: value.productList![index].description!,
+                  productPrice: "${value.productList![index].price.toString()} ₺",
+                  productModel: value.productList![index],
+                  index: index,
+                );
               }),
             ),
           ),
@@ -207,9 +219,6 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _coffeeList(Size size, BuildContext context, ProductListViewModel value) {
-    /*  if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
-      value.coffeeList = value.searchProducts!;
-    } */
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -220,7 +229,17 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 4,
-              children: List.generate(value.coffeeList!.length, (index) => _productCart(context, value, index)),
+              children: List.generate(
+                  value.coffeeList!.length,
+                  (index) => ProductCardWidget(
+                        value: value,
+                        imageUrl: value.coffeeList![index].image!.path,
+                        productName: value.coffeeList![index].name.toString(),
+                        productDescription: value.coffeeList![index].description!,
+                        productPrice: "${value.coffeeList![index].price.toString()} ₺",
+                        productModel: value.coffeeList![index],
+                        index: index,
+                      )),
             ),
           ),
         ],
@@ -229,10 +248,6 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
   }
 
   Padding _sweetList(Size size, BuildContext context, ProductListViewModel value) {
-    /*  if (value.searchProducts != null && value.searchProducts!.isNotEmpty) {
-      value.sweetList = value.searchProducts!.where((element) => element.isSweet == "sweet").toList();
-      value.coffeeList = value.searchProducts!.where((element) => element.isSweet == "coffee").toList();
-    } */
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -243,7 +258,17 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
             child: GridView.count(
               shrinkWrap: true,
               crossAxisCount: 4,
-              children: List.generate(value.sweetList!.length, (index) => _productCart(context, value, index)),
+              children: List.generate(
+                  value.sweetList!.length,
+                  (index) => ProductCardWidget(
+                        value: value,
+                        imageUrl: value.sweetList![index].image!.path,
+                        productName: value.sweetList![index].name.toString(),
+                        productDescription: value.sweetList![index].description!,
+                        productPrice: "${value.sweetList![index].price.toString()} ₺",
+                        productModel: value.sweetList![index],
+                        index: index,
+                      )),
             ),
           ),
         ],
@@ -272,146 +297,5 @@ class _ProductsScreenState extends State<ProductsScreen> with TickerProviderStat
                 child: const Icon(Icons.search),
               )),
         ));
-  }
-
-  Stack _productCart(BuildContext context, ProductListViewModel value, int index) {
-    return Stack(
-      children: [_card(context, value, index), _deleteButton(value, index)],
-    );
-  }
-
-  Card _card(BuildContext context, ProductListViewModel value, int index) {
-    return Card(
-      elevation: 4,
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 4,
-                child: Column(
-                  children: [
-                    Expanded(flex: 2, child: _coffeeImage(value, index)),
-                    Expanded(flex: 2, child: _productName(context, value, index)),
-                    Expanded(flex: 2, child: _description(value, index)),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [_price(context, value, index), _button(context, index, value)],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Positioned _deleteButton(ProductListViewModel model, int index) {
-    return Positioned(
-      top: 12,
-      right: 12,
-      child: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(actions: [
-              TextButton(
-                  onPressed: () {
-                    model.deleteProduct(model.productList![index].id!);
-                    context.router.pop(context);
-                    model.productList!.removeAt(index);
-                  },
-                  child: const Text("Evet")),
-              TextButton(
-                  onPressed: () {
-                    context.router.pop();
-                  },
-                  child: const Text("Hayır"))
-            ], content: const Text("Ürünü silmek istediğinize emin misiniz ?")),
-          );
-        },
-        child: Container(
-          width: 30,
-          height: 30,
-          //margin: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const <BoxShadow>[BoxShadow(color: Colors.white, spreadRadius: 1, blurRadius: 15)]),
-          child: Icon(
-            Icons.delete,
-            color: Colors.red.shade400,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Container _coffeeImage(ProductListViewModel value, int index) {
-    return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: CachedNetworkImage(
-        imageUrl: value.productList![index].image!.path,
-        width: double.infinity,
-        height: 100,
-        fit: BoxFit.contain,
-      ),
-    );
-  }
-
-  Padding _productName(BuildContext context, ProductListViewModel value, int index) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Text(
-        value.productList![index].name!,
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 24, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Text _description(ProductListViewModel value, int index) {
-    return Text(
-      value.productList![index].description ?? " ",
-      maxLines: 4,
-      overflow: TextOverflow.ellipsis,
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 20),
-    );
-  }
-
-  Text _price(BuildContext context, ProductListViewModel value, int index) {
-    return Text(
-      value.productList![index].price.toString(),
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 24, fontWeight: FontWeight.w500),
-    );
-  }
-
-  SizedBox _button(BuildContext context, int index, ProductListViewModel value) {
-    return SizedBox(
-        width: 100,
-        height: 50,
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 4,
-              backgroundColor: Colors.brown.shade400,
-            ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return UpdateProductScreen(product: value.productList![index]);
-                },
-              );
-            },
-            child: const Text("Düzenle")));
   }
 }

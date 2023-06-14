@@ -6,8 +6,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget with AutoRouteAware {
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,7 @@ class HomeScreen extends StatelessWidget {
             if (Responsive.isDesktop(context))
               const Expanded(
                 flex: 1,
-                child: SideMenuScreen(
-                    //press: (index) => value.selectedIndex(index),
-                    ),
+                child: SideMenuScreen(),
               ),
             const Expanded(flex: 9, child: AutoRouter()),
           ],

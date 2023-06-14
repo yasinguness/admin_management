@@ -1,9 +1,11 @@
+import 'package:admin_management/common/constants/colors.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/model/user/user.dart';
 import 'package:admin_management/network/services/user/user_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/settings/view_model/settings_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class PersonalInfo extends StatefulWidget {
   const PersonalInfo({
@@ -28,9 +30,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
       model: SettingsViewModel(userService: locator<UserService>(), model: UserModel()),
       onModelReady: (p0) => p0.getUserProfile(),
       builder: (context, value, widget) => value.busy
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Center(child: LoadingAnimationWidget.threeRotatingDots(color: AppColors.brown, size: 48))
           : Dialog(
               child: Container(
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),

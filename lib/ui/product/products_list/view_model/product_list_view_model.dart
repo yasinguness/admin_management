@@ -42,6 +42,7 @@ class ProductListViewModel extends BaseModel {
   Future getCoffee() async {
     setBusy(true);
     coffeeList = await productService.getCoffee();
+    //productProvider!.getCoffee(coffeeList!);
     setBusy(false);
   }
 
@@ -60,7 +61,6 @@ class ProductListViewModel extends BaseModel {
   Future updateProduct(String id, ProductModel model) async {
     setBusy(true);
     productProvider!.update(model);
-    //TODO:ürün güncellendiğnide ekrana güncel hali düşmüyor
     isUpdated = await productService.updateProduct(id, productProvider!.product);
     setBusy(false);
     return isUpdated;

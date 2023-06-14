@@ -1,5 +1,5 @@
 import 'package:admin_management/common/constants/colors.dart';
-import 'package:admin_management/ui/order_statistic/order_statistic_view_model.dart';
+import 'package:admin_management/ui/order_statistic/view_model/order_statistic_view_model.dart';
 import 'package:flutter/material.dart';
 
 class StatisticCard extends StatelessWidget {
@@ -30,7 +30,7 @@ class StatisticCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
       child: Card(
         elevation: 4,
-        color: color ?? Colors.yellow,
+        color: color ?? const Color.fromARGB(255, 202, 195, 181),
         child: Container(
           decoration: const BoxDecoration(),
           width: size.width,

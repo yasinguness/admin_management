@@ -2,8 +2,9 @@ import 'package:admin_management/common/provider/product_provider.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/model/product/product.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
+import 'package:admin_management/router/app_router.dart';
 import 'package:admin_management/ui/product/products_list/view_model/product_list_view_model.dart';
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -93,29 +94,44 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
-                    onPressed: () async {
-                      widget.product.name = nameText.text;
-                      widget.product.description = descriptionText.text;
-                      widget.product.price = double.parse(priceText.text);
-                      widget.product.image = productListViewModel.uploadfile;
-
-                      bool isUpdated = await productListViewModel.updateProduct(widget.product.id!, widget.product);
-                      if (isUpdated) {
-                        setState(() {
-                          Navigator.pop(context);
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Güncellenemedi")));
-                      }
-                      //TODO: Düzenle isteği çalışmıyor
+                    onPressed: () {
+                      _isAddedFunc(productListViewModel, context);
                     },
-                    child: const Text("Güncelle")),
+                    child: productListViewModel.busy
+                        ? const CircularProgressIndicator(
+                            strokeWidth: 2,
+                          )
+                        : const Text("Güncelle")),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void _isAddedFunc(ProductListViewModel productListViewModel, BuildContext context) {
+    widget.product.name = nameText.text;
+    widget.product.description = descriptionText.text;
+    widget.product.price = double.parse(priceText.text);
+    widget.product.image = productListViewModel.uploadfile;
+    if (!productListViewModel.busy) {
+      productListViewModel.updateProduct(widget.product.id!, widget.product).then((isUpdated) {
+        if (isUpdated) {
+          context.router.pop();
+          context.router.push(const ProductsRoute());
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Güncellenemedi")));
+        }
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text("Hata! $error"),
+          ),
+        );
+      });
+    }
   }
 
   SizedBox _image() {

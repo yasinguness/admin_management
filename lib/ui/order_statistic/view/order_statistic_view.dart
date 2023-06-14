@@ -1,12 +1,14 @@
-import 'package:admin_management/common/widgets/statistic_card_widget.dart';
+import 'package:admin_management/common/constants/colors.dart';
+import 'package:admin_management/common/widgets/dashboard_widget/statistic_card_widget.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/order/order_service.dart';
 import 'package:admin_management/network/services/product/product_service.dart';
 import 'package:admin_management/ui/base/base_view.dart';
-import 'package:admin_management/ui/order_statistic/order_statistic_view_model.dart';
+import 'package:admin_management/ui/order_statistic/view_model/order_statistic_view_model.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 @RoutePage()
 class OrderStatisticScreen extends StatelessWidget {
@@ -21,7 +23,7 @@ class OrderStatisticScreen extends StatelessWidget {
       onModelReady: (p0) => p0.getStatistics(),
       model: OrderStatisticViewModel(orderService: locator<OrderService>(), productService: locator<ProductService>()),
       builder: (context, value, widget) => value.busy
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingAnimationWidget.threeRotatingDots(color: AppColors.brown, size: 48))
           : Column(
               children: [
                 Expanded(
@@ -63,7 +65,7 @@ class OrderStatisticScreen extends StatelessWidget {
               .titleLarge!
               .copyWith(fontSize: 36, fontWeight: FontWeight.w700, color: const Color.fromARGB(255, 49, 19, 3)),
         ),
-        counter: value.model!.dailyTotalOrderAmount.toString(),
+        counter: "${value.model!.dailyTotalOrderAmount.toString()} ₺",
         widget: SizedBox(height: iconHeight, child: Image.asset("assets/ic/daily-report.png")));
   }
 
@@ -78,7 +80,7 @@ class OrderStatisticScreen extends StatelessWidget {
               .titleLarge!
               .copyWith(fontSize: 36, fontWeight: FontWeight.w700, color: const Color.fromARGB(255, 49, 19, 3)),
         ),
-        counter: value.model!.totalOrderCount.toString(),
+        counter: "${value.model!.totalOrderAmount.toString()} ₺",
         widget: SizedBox(height: iconHeight, child: Image.asset("assets/ic/money.png")));
   }
 

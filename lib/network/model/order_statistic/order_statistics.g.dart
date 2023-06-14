@@ -16,6 +16,7 @@ OrderStatisticsModel _$OrderStatisticsModelFromJson(
       dailyTotalOrderAmount: json['dailyTotalOrderAmount'] as int?,
       totalCoffeeOrders: json['totalCoffeeOrders'] as int?,
       totalDessertOrders: json['totalDessertOrders'] as int?,
+      totalOrderAmount: json['totalOrderAmount'] as int?,
     );
 
 Map<String, dynamic> _$OrderStatisticsModelToJson(
@@ -28,4 +29,5 @@ Map<String, dynamic> _$OrderStatisticsModelToJson(
       'dailyTotalOrderAmount': instance.dailyTotalOrderAmount,
       'totalCoffeeOrders': instance.totalCoffeeOrders,
       'totalDessertOrders': instance.totalDessertOrders,
+      'totalOrderAmount': instance.totalOrderAmount,
     };

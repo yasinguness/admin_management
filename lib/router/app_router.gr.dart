@@ -16,8 +16,7 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     LoginRoute.name: (routeData) {
-      final args = routeData.argsAs<LoginRouteArgs>(
-          orElse: () => const LoginRouteArgs());
+      final args = routeData.argsAs<LoginRouteArgs>(orElse: () => const LoginRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: LoginScreen(key: args.key),
@@ -32,7 +31,7 @@ abstract class _$AppRouter extends RootStackRouter {
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HomeScreen(),
+        child: HomeScreen(),
       );
     },
     ProductsRoute.name: (routeData) {
@@ -166,8 +165,7 @@ class UpdateProductRoute extends PageRouteInfo<UpdateProductRouteArgs> {
 
   static const String name = 'UpdateProductRoute';
 
-  static const PageInfo<UpdateProductRouteArgs> page =
-      PageInfo<UpdateProductRouteArgs>(name);
+  static const PageInfo<UpdateProductRouteArgs> page = PageInfo<UpdateProductRouteArgs>(name);
 }
 
 class UpdateProductRouteArgs {

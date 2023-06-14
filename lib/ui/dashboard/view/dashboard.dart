@@ -1,3 +1,4 @@
+import 'package:admin_management/common/constants/colors.dart';
 import 'package:admin_management/common/provider/order_provider.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/item_row.dart';
 import 'package:admin_management/common/widgets/dashboard_widget/order_detail.dart';
@@ -9,6 +10,7 @@ import 'package:admin_management/ui/base/base_view.dart';
 import 'package:admin_management/ui/dashboard/view_model/dashboard_view_model.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -20,16 +22,28 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> with TickerProviderStateMixin {
+  late TabController controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TabController controller = TabController(length: 3, vsync: this);
     var size = MediaQuery.of(context).size; // Değişkeni almak için Provider.of kullanılır
 
     return BaseView<DashboardViewModel>(
       builder: (context, value, widget) => value.busy
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Center(child: LoadingAnimationWidget.threeRotatingDots(color: AppColors.brown, size: 48))
           : Row(
               children: [
                 Expanded(
@@ -42,8 +56,10 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                 )
               ],
             ),
-      model:
-          DashboardViewModel(orderService: locator<OrderService>(), orderProvider: Provider.of<OrderProvider>(context)),
+      model: DashboardViewModel(
+        orderService: locator<OrderService>(),
+        orderProvider: Provider.of<OrderProvider>(context),
+      ),
       onModelReady: (p0) => p0.fetchOrders(),
     );
   }
@@ -64,7 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
         Padding(
           padding: const EdgeInsets.all(24.0),
           child: Text(
-            "TASK LIST",
+            "SİPARİŞ LİSTESİ",
             style:
                 Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -357,7 +373,7 @@ class OrderInfoRow extends StatelessWidget {
     );
   }
 }
- /*  Row(
+/*  Row(
         children: [
           Expanded(
               flex: 4,
@@ -404,15 +420,13 @@ class OrderInfoRow extends StatelessWidget {
               ))
         ], */
 
-
- /* Header(),
+/* Header(),
             SizedBox(
               height: 16,
             ),
             OrderList() */
 
-
-            /* Expanded(
+/* Expanded(
                   flex: 2,
                   child: Container(
                     color: Colors.red,

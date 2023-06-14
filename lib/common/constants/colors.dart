@@ -8,4 +8,5 @@ class AppColors {
   static Color white = const Color.fromARGB(255, 255, 255, 255);
   static Color brown = Colors.brown.shade500;
   //static Color bgColor = const Color(0xFF212332);
+  static Color darkTitle = const Color.fromARGB(255, 232, 229, 228);
 }

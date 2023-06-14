@@ -26,6 +26,7 @@ class UploadProductViewModel extends BaseModel {
   }
 
   Future addProduct() async {
+    setBusy(true);
     ProductModel model = ProductModel(
         image: selectedFile,
         name: name.text,

@@ -1,4 +1,4 @@
-import 'package:admin_management/common/widgets/drawer_list_tile.dart';
+import 'package:admin_management/common/widgets/dashboard_widget/drawer_list_tile.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/network/services/user/user_service.dart';
 import 'package:admin_management/router/app_router.dart';
@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 @RoutePage()
 class SideMenuScreen extends StatefulWidget {
-  //final void Function(int index) press;
   const SideMenuScreen({super.key});
 
   @override
@@ -65,7 +64,7 @@ class _SideMenuScreenState extends State<SideMenuScreen> {
             title: "Ayarlar",
             svgSrc: "assets/icons/menu_setting.svg",
             press: () {
-              context.router.push(const SettingsRoute());
+              context.router.navigate(const SettingsRoute());
             },
           ),
           DrawerListTile(

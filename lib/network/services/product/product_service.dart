@@ -47,15 +47,13 @@ class ProductService extends BaseService {
 
       Map<String, String> headers = {"Authorization": "Bearer $token"};
       request.headers.addAll(headers);
+
       request.fields.addAll({"name": model!.name!, "price": model.price.toString(), "description": model.description!});
 
-      var img = await model.image!.readAsBytes();
-      // Resim dosyasını ekleyin
-
-      request.files.add(http.MultipartFile.fromBytes('image', img, filename: "newImage.jpeg"));
-
-      // Bearer token'ı ekleyin
-      // Kendi Bearer token'ınızı buraya yazın
+      if (model.image != null) {
+        var img = await model.image!.readAsBytes();
+        request.files.add(http.MultipartFile.fromBytes('image', img, filename: "newImage.jpeg"));
+      }
 
       var response = await request.send();
 
@@ -100,7 +98,7 @@ class ProductService extends BaseService {
 
       var response = await request.send();
 
-      if (response.statusCode == HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.created) {
         print("Ürün Eklendi");
         return true;
       }

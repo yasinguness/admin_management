@@ -1,7 +1,7 @@
 import 'package:admin_management/common/provider/auth_provider.dart';
 import 'package:admin_management/common/provider/order_provider.dart';
 import 'package:admin_management/common/provider/product_provider.dart';
-import 'package:admin_management/common/themes/theme.dart';
+import 'package:admin_management/common/provider/theme_notifier.dart';
 import 'package:admin_management/locator.dart';
 import 'package:admin_management/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +28,17 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeNotifier(),
+        ),
       ],
-      child: MaterialApp.router(
-        theme: themeData,
+      builder: (context, child) => MaterialApp.router(
+        theme: context.watch<ThemeNotifier>().currentThemeData,
         routerConfig: _appRouter.config(/* reevaluateListenable: AuthProvider() */),
         title: 'Admin Management',
-        /*  initialRoute: RouteConst.loginView,
-        onGenerateRoute: generateRoute, */
+        //routerDelegate: AutoRouterDelegate(_appRouter),
+        //routeInformationProvider: _appRouter.routeInfoProvider(),
       ),
     );
   }

@@ -130,20 +130,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         width: 150,
         height: 50,
         child: ElevatedButton(
-          onPressed: () async {
-            bool isAdd = await model.addProduct();
-            if (isAdd) {
-              if (mounted) {
-                context.router.push(const ProductsRoute());
-
-//                await Navigator.pushNamed(context, RouteConst.productLists);
-              } else {
-                const AlertDialog(
-                  content: Text("İşlem Başarısız"),
-                );
-              }
-            }
-            //Navigator.pushNamed(context, RouteConst.productLists);
+          onPressed: () {
+            _isAddedFunc(model);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.brown,
@@ -153,12 +141,40 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           ),
-          child: const Text(
-            "Ürün Ekle",
-          ),
+          child: model.busy
+              ? const CircularProgressIndicator(
+                  strokeWidth: 2,
+                )
+              : const Text(
+                  "Ürün Ekle",
+                ),
         ),
       ),
     );
+  }
+
+  void _isAddedFunc(UploadProductViewModel model) {
+    if (!model.busy) {
+      model.addProduct().then((isAdd) {
+        if (isAdd) {
+          context.router.push(const ProductsRoute());
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => const AlertDialog(
+              content: Text("İşlem Başarısız"),
+            ),
+          );
+        }
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text("Hata! $error"),
+          ),
+        );
+      });
+    }
   }
 
   Expanded _title(BuildContext context) {

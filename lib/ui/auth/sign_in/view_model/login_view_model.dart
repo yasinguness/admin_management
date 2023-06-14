@@ -7,7 +7,7 @@ class LoginViewModel extends BaseModel {
   LoginViewModel({
     this.userService,
   });
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     bool? isLogg = await userService!.login(email, password);
     return isLogg;
   }
