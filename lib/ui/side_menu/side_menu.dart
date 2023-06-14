@@ -1,9 +1,21 @@
-import 'package:admin_management/common/widgets/drawer_list_tile.dart';
+import 'package:admin_management/common/widgets/dashboard_widget/drawer_list_tile.dart';
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/network/services/user/user_service.dart';
+import 'package:admin_management/router/app_router.dart';
+import 'package:admin_management/ui/side_menu/view_model/side_menu_view_model.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class SideMenu extends StatelessWidget {
-  const SideMenu({super.key});
+@RoutePage()
+class SideMenuScreen extends StatefulWidget {
+  const SideMenuScreen({super.key});
 
+  @override
+  State<SideMenuScreen> createState() => _SideMenuScreenState();
+}
+
+class _SideMenuScreenState extends State<SideMenuScreen> {
+  var model = SideMenuViewModel(userService: locator<UserService>());
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -21,45 +33,47 @@ class SideMenu extends StatelessWidget {
             ),
           )),
           DrawerListTile(
-            title: "Dashboard",
+            title: "Siparişler",
             svgSrc: "assets/icons/menu_dashbord.svg",
-            press: () {},
+            press: () {
+              context.router.push(const DashboardRoute());
+            },
           ),
           DrawerListTile(
-            title: "Transaction",
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Task",
-            svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Documents",
-            svgSrc: "assets/icons/menu_doc.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "Store",
+            title: "Ürün Listesi",
             svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
+            press: () {
+              context.router.push(const ProductsRoute());
+            },
           ),
           DrawerListTile(
-            title: "Notification",
-            svgSrc: "assets/icons/menu_notification.svg",
-            press: () {},
+            title: "Ürün Ekle",
+            svgSrc: "assets/icons/product.svg",
+            press: () {
+              context.router.push(const UploadProductRoute());
+            },
           ),
           DrawerListTile(
-            title: "Profile",
-            svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            title: "İstatistikler",
+            svgSrc: "assets/icons/menu_tran.svg",
+            press: () {
+              context.router.push(const OrderStatisticRoute());
+            },
           ),
           DrawerListTile(
-            title: "Settings",
+            title: "Ayarlar",
             svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
+            press: () {
+              context.router.navigate(const SettingsRoute());
+            },
           ),
+          DrawerListTile(
+            title: "Çıkış Yap",
+            svgSrc: "assets/icons/logout.svg",
+            press: () {
+              model.logout(context);
+            },
+          )
         ],
       ),
     );

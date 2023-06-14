@@ -1,18 +1,45 @@
-import 'package:admin_management/network/services/api.dart';
-import 'package:admin_management/ui/home/home.dart';
+import 'package:admin_management/common/provider/auth_provider.dart';
+import 'package:admin_management/common/provider/order_provider.dart';
+import 'package:admin_management/common/provider/product_provider.dart';
+import 'package:admin_management/common/provider/theme_notifier.dart';
+import 'package:admin_management/locator.dart';
+import 'package:admin_management/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final _appRouter = AppRouter();
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Api api = Api();
-    return const MaterialApp(
-      title: 'Material App',
-      home: HomeScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProductProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeNotifier(),
+        ),
+      ],
+      builder: (context, child) => MaterialApp.router(
+        theme: context.watch<ThemeNotifier>().currentThemeData,
+        routerConfig: _appRouter.config(/* reevaluateListenable: AuthProvider() */),
+        title: 'Admin Management',
+        //routerDelegate: AutoRouterDelegate(_appRouter),
+        //routeInformationProvider: _appRouter.routeInfoProvider(),
+      ),
     );
   }
 }
